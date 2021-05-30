@@ -39,7 +39,7 @@ If you use our implementation for your academic research, please cite the relate
   pages={1-10}
 ~~~
 
-***ekf_rio and radar_ego_velocity_estimation***
+***ekf_rio and radar_ego_velocity_estimation:***
 ~~~[bibtex]
 @INPROCEEDINGS{DoerENC2020,
   author={Doer, Christopher and Trommer, Gert F.},

@@ -46,11 +46,6 @@ Run the demo launch file which also does an evaluation and generates the twos pl
 roslaunch radar_ego_velocity_estimation demo_datasets_radar_body_velocity_estimator_rosbag.launch
 ~~~
 
-Run with the vicon_medium demo dataset:
-~~~[shell]
-roslaunch radar_ego_velocity_estimation demo_datasets_radar_body_velocity_estimator_rosbag.launch rosbag:=vicon_medium.bag
-~~~
-
 Run the body velocity estimation in online mode:
 ~~~[shell]
 roslaunch radar_ego_velocity_estimation demo_datasets_radar_body_velocity_estimator_ros.launch
