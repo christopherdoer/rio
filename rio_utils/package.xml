@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>rio_utils</name>
+  <version>0.0.0</version>
+  <description>The rio_utils package provides utils used by the other RIO packages</description>
+
+  <maintainer email="christopher.doer@kit.edu">user</maintainer>
+
+  <license>GPLv3</license>
+
+  <!-- Url tags are optional, but multiple are allowed, one per tag -->
+  <!-- Optional attribute type can be: website, bugtracker, or repository -->
+  <!-- Example: -->
+  <!-- <url type="website">http://wiki.ros.org/nav_utils</url> -->
+
+   <author email="christopher.doer@kit.edu">Christopher Doer</author>
+
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <buildtool_depend>catkin_simple</buildtool_depend>
+  <build_depend>Eigen3</build_depend>
+  <build_depend>gflags_catkin</build_depend>
+  <build_depend>glog_catkin</build_depend>
+  <build_depend>eigen_checks</build_depend>
+  <build_depend>message_generation</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>roscpp</build_depend>
+
+  <depend>message_runtime</depend>
+  <depend>sensor_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>yaml-cpp</depend>
+  <depend>angles</depend>
+  <depend>tf2_ros</depend>
+  <depend>pcl_ros</depend>
+
+</package>

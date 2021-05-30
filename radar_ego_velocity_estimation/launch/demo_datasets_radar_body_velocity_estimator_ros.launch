@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!--This file is part of RIO - Radar Inertial Odometry and Radar based ego velocity estimation.-->
+<!--@author Christopher Doer <christopher.doer@kit.edu>-->
+
+<launch>
+    <arg name="config" default="params_demo_dataset"/>
+    <arg name="calibration" default="$(find ekf_rio)../demo_datasets/calib_vicon_dataset"/>
+
+    <arg name="topic_twist" default="/radar_body_velocity_estimation_node/twist_body"/>
+    <arg name="run_without_trigger" default="False"/>
+
+    <node name="radar_body_velocity_estimator" pkg="radar_ego_velocity_estimation" type="radar_body_velocity_estimation_ros_node" output="screen">
+
+        <rosparam file="$(find radar_ego_velocity_estimation)/config/$(arg config).yaml" command="load"/>
+        <rosparam file="$(arg calibration).yaml" command="load" ns=""/>
+
+        <param name="gyro_init_s" value="1.0" type="double"/>
+        <param name="run_without_trigger" value="$(arg run_without_trigger)" type="bool"/>
+
+        <param name="topic_twist" value="$(arg topic_twist)" type="string"/>
+        <param name="topic_imu" value="/sensor_platform/imu" type="string"/>
+        <param name="topic_radar_scan" value="/sensor_platform/radar/scan" type="string"/>
+        <param name="topic_radar_trigger" value="/sensor_platform/radar/trigger" type="string"/>
+    </node>
+
+    <node name="velocity_estimation_evaluator" pkg="radar_ego_velocity_estimation" type="velocity_estimation_evaluator.py" output="screen"
+          required="True">
+        <rosparam file="$(arg calibration).yaml" command="load" ns=""/>
+        <param name="topic_v_b" value="$(arg topic_twist)" type="string"/>
+    </node>
+</launch>

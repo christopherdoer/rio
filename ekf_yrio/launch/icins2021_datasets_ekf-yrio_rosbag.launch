@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!--This file is part of RIO - Radar Inertial Odometry and Radar based ego velocity estimation.-->
+<!--@author Christopher Doer <christopher.doer@kit.edu>-->
+
+<launch>
+    <param name="use_sim_time" value="False" type="bool"/>
+    <arg name="enable_rviz" default="True"/>
+
+    <arg name="dataset_dir"/>
+    <arg name="rosbag"/>
+
+    <arg name="config" default="ekf_yrio_default"/>
+    <arg name="calibration" default="$(arg dataset_dir)/calib"/>
+
+    <arg name="bag_start" default="0"/>
+    <arg name="bag_duration" default="-1.0"/>
+    <arg name="filter_node_name" default="ekf_yrio"/>
+
+    <arg name="log_level" default="Info"/>
+
+    <node name="$(arg filter_node_name)" pkg="ekf_yrio" type="rosbag_node" output="screen" launch-prefix="bash -c 'sleep 2; $0 $@' ">
+        <rosparam file="$(find ekf_yrio)/config/$(arg config).yaml" command="load" ns=""/>
+        <rosparam file="$(arg calibration).yaml" command="load" ns=""/>
+        <param name="rosbag_path" value="$(arg dataset_dir)/$(arg rosbag)" type="string"/>
+        <param name="bag_start" value="$(arg bag_start)" type="double"/>
+        <param name="bag_duration" value="$(arg bag_duration)" type="double"/>
+        <param name="republish_ground_truth" value="true" type="bool"/>
+        <param name="enable_yaw_aiding" value="true" type="bool"/>
+    </node>
+
+    <node pkg="rosservice" type="rosservice" name="set_$(arg filter_node_name)_log_level"
+          args="call --wait /$(arg filter_node_name)/set_logger_level 'ros.$(arg filter_node_name)' '$(arg log_level)'"/>
+
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(find ekf_yrio)/config/ekf_yrio.rviz" if="$(arg enable_rviz)"/>
+
+</launch>
