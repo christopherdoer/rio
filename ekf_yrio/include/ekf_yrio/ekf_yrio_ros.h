@@ -127,7 +127,7 @@ private:
    */
   void printStats();
 
-  const std::string kStreamingPrefix = "[EkfRioRos]: ";
+  const std::string kStreamingPrefix = "[EkfYRioRos]: ";
 
   dynamic_reconfigure::Server<ekf_yrio::EkfYRioConfig> reconfigure_server_;
 
@@ -143,6 +143,7 @@ private:
   ros::Publisher pub_pose_;
   ros::Publisher pub_twist_;
   ros::Publisher pub_radar_scan_inlier_;
+  ros::Publisher pub_radar_yaw_inlier_;
 
   ros::Publisher pub_ground_truth_pose_;
   ros::Publisher pub_ground_truth_twist_;

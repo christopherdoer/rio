@@ -16,7 +16,7 @@
     <arg name="bag_duration" default="-1.0"/>
     <arg name="filter_node_name" default="ekf_yrio"/>
 
-    <arg name="log_level" default="Info"/>
+    <arg name="log_level" default="Debug"/>
 
     <node name="$(arg filter_node_name)" pkg="ekf_yrio" type="rosbag_node" output="screen" launch-prefix="bash -c 'sleep 2; $0 $@' ">
         <rosparam file="$(find ekf_yrio)/config/$(arg config).yaml" command="load" ns=""/>

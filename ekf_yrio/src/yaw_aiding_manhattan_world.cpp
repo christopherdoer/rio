@@ -25,20 +25,19 @@ YawAidingManhattanWorld::YawAidingManhattanWorld(ros::NodeHandle& nh)
 {
   pub_filtered_ = nh.advertise<sensor_msgs::PointCloud2>("pcl_filtered", 1);
   pub_init_     = nh.advertise<sensor_msgs::PointCloud2>("pcl_init", 1);
-  pub_inlier_   = nh.advertise<sensor_msgs::PointCloud2>("pcl_inlier", 1);
 }
 
 bool YawAidingManhattanWorld::update(const sensor_msgs::PointCloud2& radar_scan_msg,
-                                     const Real sigma_yaw,
-                                     const Real outlier_rejection_thresh,
-                                     EkfYRioFilter& filter_state)
+                                     const RadarCloneState& radar_filter_state,
+                                     Real& yaw_m,
+                                     sensor_msgs::PointCloud2& yaw_inlier)
 {
   if (!initialized_)
-    init(radar_scan_msg, filter_state);
+    init(radar_scan_msg, radar_filter_state);
   if (initialized_)
   {
     RadarDetections detections_filtered;
-    if (getFilteredDetections(radar_scan_msg, filter_state.getRadarCloneState(), detections_filtered))
+    if (getFilteredDetections(radar_scan_msg, radar_filter_state, detections_filtered))
     {
       std::pair<Real, RadarDetection> best_fit{2 * M_PI, RadarDetection()};
       for (const auto& detection : detections_filtered.detections)
@@ -56,13 +55,13 @@ bool YawAidingManhattanWorld::update(const sensor_msgs::PointCloud2& radar_scan_
       {
         Real azi_stab, ele_stab, r_stab;
         math_helper::cartesianToSpherical(best_fit.second.p_stab, r_stab, azi_stab, ele_stab);
-        const Real yaw_m_shifted = math_helper::wrapToPositive(azi_stab - gamma_manhattan_, 2 * M_PI);
+        const Real yaw_m_shifted = math_helper::wrapToPositive(-azi_stab + gamma_manhattan_, 2 * M_PI);
         const Real yaw_filter =
-            math_helper::wrapToPositive(filter_state.getRadarCloneState().nav_sol.getEuler_n_b().yaw(), 2 * M_PI);
+            math_helper::wrapToPositive(radar_filter_state.nav_sol.getEuler_n_b().yaw(), 2 * M_PI);
 
         const int k               = static_cast<int>(std::round((yaw_filter - yaw_m_shifted) / (M_PI / 2)));
         const Real yaw_m_positive = math_helper::wrapToPositive(yaw_m_shifted + k * M_PI / 2, 2 * M_PI);
-        const Real yaw_m          = math_helper::wrapToCentered(yaw_m_positive, M_PI);
+        yaw_m                     = math_helper::wrapToCentered(yaw_m_positive, M_PI);
 
         ROS_DEBUG("best fit diff: %0.2f, azi_stab: %0.2f, yaw_m_shifted: %0.2f, k: %d, yaw_filter: %0.2f, "
                   "yaw_m_positive: "
@@ -74,56 +73,11 @@ bool YawAidingManhattanWorld::update(const sensor_msgs::PointCloud2& radar_scan_
                   angles::to_degrees(yaw_filter),
                   angles::to_degrees(yaw_m_positive));
 
-        Matrix H = Matrix::Zero(1, filter_state.getCovarianceMatrix().cols());
-        Vector r(1);
-        Vector R_diag(1);
+        RadarDetections inlier;
+        inlier.nav_sol = radar_filter_state.nav_sol;
+        inlier.detections.emplace_back(best_fit.second);
+        convertToPcl(inlier, radar_scan_msg.header, yaw_inlier);
 
-        H.block(0, filter_state.getErrorIdx().sc_attitude + 2, 1, 1) = Matrix::Ones(1, 1);
-        r[0] =
-            -math_helper::wrapToCentered(filter_state.getRadarCloneState().nav_sol.getEuler_n_b().yaw() - yaw_m, M_PI);
-        R_diag[0] = sigma_yaw * sigma_yaw;
-        ROS_DEBUG(
-            "yaw_filter: %0.2f, yaw_m: %0.2f", filter_state.getRadarCloneState().nav_sol.getEuler_n_b().yaw(), yaw_m);
-        ROS_DEBUG_STREAM("r=" << r[0] << " -- > " << angles::to_degrees(r[0]) << "deg");
-
-        // outlier rejection
-        if (outlier_rejection_thresh > 0.001)
-        {
-          const Real gamma =
-              r.transpose() *
-              (H * filter_state.getCovarianceMatrix() * H.transpose() + Matrix(R_diag.asDiagonal())).inverse() * r;
-          boost::math::chi_squared chiSquaredDist(1.0);
-          const double gamma_thresh = boost::math::quantile(chiSquaredDist, 1 - outlier_rejection_thresh);
-
-          ROS_DEBUG_STREAM("gamma: " << gamma << ", thresh: " << gamma_thresh);
-
-          if (gamma < gamma_thresh)
-          {
-            filter_state.kfUpdate(r, H, R_diag);
-            sensor_msgs::PointCloud2 msg_pcl_inlier;
-            RadarDetections inlier;
-            inlier.nav_sol = filter_state.getNavigationSolution();
-            inlier.detections.emplace_back(best_fit.second);
-            convertToPcl(inlier, radar_scan_msg.header, msg_pcl_inlier);
-            pub_inlier_.publish(msg_pcl_inlier);
-            ROS_DEBUG_STREAM(kPrefix << "Inlier RIO Yaw");
-          }
-          else
-          {
-            ROS_WARN_STREAM(kPrefix << "Outlier RIO Yaw");
-            return false;
-          }
-        }
-        else
-        {
-          filter_state.kfUpdate(r, H, R_diag);
-          sensor_msgs::PointCloud2 msg_pcl_inlier;
-          RadarDetections inlier;
-          inlier.nav_sol = filter_state.getNavigationSolution();
-          inlier.detections.emplace_back(best_fit.second);
-          convertToPcl(inlier, radar_scan_msg.header, msg_pcl_inlier);
-          pub_inlier_.publish(msg_pcl_inlier);
-        }
         return true;
       }
     }
@@ -131,10 +85,10 @@ bool YawAidingManhattanWorld::update(const sensor_msgs::PointCloud2& radar_scan_
   return false;
 }
 
-bool YawAidingManhattanWorld::init(const sensor_msgs::PointCloud2& radar_scan_msg, const EkfRioFilter& filter_state)
+bool YawAidingManhattanWorld::init(const sensor_msgs::PointCloud2& radar_scan_msg, const RadarCloneState& radar_filter_state)
 {
   RadarDetections detections_filtered;
-  if (getFilteredDetections(radar_scan_msg, filter_state.getRadarCloneState(), detections_filtered))
+  if (getFilteredDetections(radar_scan_msg, radar_filter_state, detections_filtered))
   {
     for (const auto& detection : detections_filtered.detections)
       candidates_.emplace_back(
@@ -148,7 +102,7 @@ bool YawAidingManhattanWorld::init(const sensor_msgs::PointCloud2& radar_scan_ms
       // retransform --> body radar extrinsics should recalibrated by now
       for (auto& candidate : candidates_)
       {
-        const Isometry T_b_r = filter_state.getRadarCloneState().T_b_r;
+        const Isometry T_b_r = radar_filter_state.T_b_r;
 
         candidate.radar_detection.p_body = T_b_r.linear() * candidate.radar_detection.p_radar;
         const Vector3 p_stab_n           = candidate.radar_detection.C_n_b * candidate.radar_detection.p_body;
@@ -207,7 +161,7 @@ bool YawAidingManhattanWorld::init(const sensor_msgs::PointCloud2& radar_scan_ms
           ROS_INFO("Gamma Manhattan Raw = %0.2f; Gamma Manhattan refined %0.2f @ yaw = %0.2f",
                    gamma_manhattan_deg_raw,
                    gamma_manhattan_deg,
-                   filter_state.getNavigationSolution().getEuler_n_b().to_degrees().z());
+                   radar_filter_state.nav_sol.getEuler_n_b().to_degrees().z());
 
           initialized_     = true;
           gamma_manhattan_ = angles::from_degrees(gamma_manhattan_deg);

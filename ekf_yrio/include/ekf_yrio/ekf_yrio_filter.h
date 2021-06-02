@@ -19,6 +19,7 @@
 #include <sensor_msgs/Imu.h>
 #include <rio_utils/data_types.h>
 #include <rio_utils/strapdown.h>
+#include <rio_utils/math_helper.h>
 
 #include <ekf_yrio/EkfYRioConfig.h>
 #include <ekf_rio/ekf_rio_filter.h>
@@ -35,31 +36,16 @@ public:
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
   /**
-   * @brief Reconfigure callback, enables online reconfigure using rqt_reconfigure
-   * @param config   must contain the members of EkfRioConfig
+   * @brief Implements a global yaw angle update
+   * @param yaw_m                     global yaw angle measurement
+   * @param sigma_yaw                  noise of meausrement
+   * @param outlier_rejection_thresh   reject measurement if below this percentil
+   * @returns true if the measurement is an inlier
    */
-  template <class ConfigContainingEkfRioConfig>
-  bool configure(ConfigContainingEkfRioConfig& config);
-
-  /**
-   * @brief Implements an Extended Kalman Filter update
-   * @param r       observed residuum
-   * @param H       measurement jacobian
-   * @param R_diag  diagonal elements of the measurement noise matrix
-   * @returns true if successful
-   */
-  bool kfUpdate(const Vector& r, const Matrix& H, const Vector& R_diag) { return EkfRioFilter::kfUpdate(r, H, R_diag); }
+  bool updateYaw(const Real& yaw_m, const Real& sigma_yaw, const Real& outlier_rejection_thresh);
 
 protected:
-  std::string kStreamingPrefix = "[EkfRioFilter]: ";
+  std::string kStreamingPrefix = "[EkfYRioFilter]: ";
 };
-
-template <typename ConfigContainingEkfRioConfig>
-bool EkfYRioFilter::configure(ConfigContainingEkfRioConfig& config)
-{
-  bool success = true;
-  success |= EkfRioFilter::configure(config);
-  return success;
-}
 
 }  // namespace rio

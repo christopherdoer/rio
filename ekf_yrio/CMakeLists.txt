@@ -12,6 +12,7 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -O3 -march=native -fopenmp")
 cs_add_library(${PROJECT_NAME}
    src/ekf_yrio_ros.cpp
    src/yaw_aiding_manhattan_world.cpp
+   src/ekf_yrio_filter.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}

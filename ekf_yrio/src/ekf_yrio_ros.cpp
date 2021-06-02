@@ -55,6 +55,7 @@ EkfYRioRos::EkfYRioRos(ros::NodeHandle& nh) : yaw_aiding_manhattan_world_(nh), i
   pub_pose_              = nh.advertise<geometry_msgs::PoseStamped>("pose", 1);
   pub_twist_             = nh.advertise<geometry_msgs::TwistStamped>("twist", 1);
   pub_radar_scan_inlier_ = nh.advertise<sensor_msgs::PointCloud2>("radar_scan_inlier", 10);
+  pub_radar_yaw_inlier_  = nh.advertise<sensor_msgs::PointCloud2>("pcl_inlier", 1);
 
   if (config_.republish_ground_truth)
   {
@@ -378,10 +379,22 @@ void EkfYRioRos::iterate()
 
               if (config_.enable_yaw_aiding)
               {
-                yaw_aiding_manhattan_world_.update(inlier_radar_scan,
-                                                   angles::from_degrees(config_.sigma_radar_yaw_deg),
-                                                   config_.outlier_percentil_radar_yaw,
-                                                   ekf_yrio_filter_);
+                Real yaw_m;
+                sensor_msgs::PointCloud2 yaw_inlier_pcl_msg;
+                bool yaw_estimation_successful =
+                    yaw_aiding_manhattan_world_.update(inlier_radar_scan,
+                                                       ekf_yrio_filter_.getRadarCloneState(),
+                                                       yaw_m,
+                                                       yaw_inlier_pcl_msg);
+                if (yaw_estimation_successful)
+                {
+                  bool yaw_inlier = ekf_yrio_filter_.updateYaw(
+                      yaw_m, angles::from_degrees(config_.sigma_radar_yaw_deg), config_.outlier_percentil_radar_yaw);
+                  if (yaw_inlier)
+                  {
+                    pub_radar_yaw_inlier_.publish(yaw_inlier_pcl_msg);
+                  }
+                }
               }
             }
             ROS_DEBUG_STREAM(kStreamingPrefix << "Removing radar clone with time stamp: "
@@ -552,7 +565,7 @@ void EkfYRioRos::printStats()
   const Vector3 p_error = p_final - p_0;
 
   // clang-format off
-  std::cout << "Evaluation (assuming the start and end pose are equal:" << std::endl;
+  std::cout << "Evaluation (assuming the start and end pose are equal) :" << std::endl;
   printf("  Trajectory length: %0.2fm\n", trajectory_length);
   printf("  Final pose: %0.2f m, %0.2f m, %0.2f m, %0.2f deg, %0.2f deg, %0.2f deg\n",
            p_final.x(), p_final.y(), p_final.z(),att_final.x(), att_final.y(), att_final.z());

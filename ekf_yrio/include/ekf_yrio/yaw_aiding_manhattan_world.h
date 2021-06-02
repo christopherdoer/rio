@@ -46,15 +46,13 @@ public:
   /**
    * @brief Update function which handles initilization and update
    * @param radar_scan_msg             radar scan
-   * @param sigma_yaw                  sigma of yaw measurement
-   * @param outlier_rejection_thresh   outlier rejection threshold
-   * @param filter_state               filter state
+   * @param radar_filter_state         relating radar filter state
    * @returns true if successful
    */
   bool update(const sensor_msgs::PointCloud2& radar_scan_msg,
-              const Real sigma_yaw,
-              const Real outlier_rejection_thresh,
-              EkfYRioFilter& filter_state);
+              const RadarCloneState& radar_filter_state,
+              Real& yaw_m,
+              sensor_msgs::PointCloud2& yaw_inlier);
 
   /**
    * @brief Reconfigure callback
@@ -71,11 +69,11 @@ public:
 protected:
   /**
    * @brief Tries to initialize the Manhattan world angle
-   * @param radar_scan_msg   radar scan
-   * @param filter_state     filter state
+   * @param radar_scan_msg      radar scan
+   * @param radar_filter_state  relating radar filter state
    * @returns true if successful
    */
-  bool init(const sensor_msgs::PointCloud2& radar_scan_msg, const EkfRioFilter& filter_state);
+  bool init(const sensor_msgs::PointCloud2& radar_scan_msg, const RadarCloneState& radar_filter_state);
 
   /**
    * @brief Does the preprocessing step of the given radar scan
@@ -123,7 +121,6 @@ protected:
 
   ros::Publisher pub_filtered_;
   ros::Publisher pub_init_;
-  ros::Publisher pub_inlier_;
 };
 
 template <class Cfg>
