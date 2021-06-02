@@ -22,6 +22,8 @@
 #include <sensor_msgs/Imu.h>
 
 #include <tf2/LinearMath/Quaternion.h>
+#include <tf2/LinearMath/Matrix3x3.h>
+#include <tf2_eigen/tf2_eigen.h>
 
 namespace rio
 {
@@ -92,7 +94,16 @@ struct NavigationSolution
 
   void setQuaternion(const Quaternion& q_n_b) { pose_n_b.linear() = q_n_b.normalized().toRotationMatrix(); }
 
-  EulerAngles getEuler_n_b() const { return EulerAngles(pose_n_b.linear().eulerAngles(0, 1, 2)); }
+  EulerAngles getEuler_n_b() const
+  {
+    const Quaternion q = getQuaternion_n_b();
+    tf2::Quaternion q_msg(q.x(), q.y(), q.z(), q.w());
+    tf2::Matrix3x3 R(q_msg);
+    EulerAngles eul;
+    R.getEulerYPR(eul.yaw(), eul.pitch(), eul.roll());
+
+    return eul;
+  }
 
   void setEuler_n_b(const EulerAngles& eul_n_b)
   {

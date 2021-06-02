@@ -32,6 +32,7 @@
   <depend>yaml-cpp</depend>
   <depend>angles</depend>
   <depend>tf2_ros</depend>
+  <depend>tf2_eigen</depend>
   <depend>pcl_ros</depend>
 
 </package>
