@@ -18,18 +18,11 @@
 
   <buildtool_depend>catkin</buildtool_depend>
   <buildtool_depend>catkin_simple</buildtool_depend>
-  <build_depend>Eigen3</build_depend>
-  <build_depend>gflags_catkin</build_depend>
-  <build_depend>glog_catkin</build_depend>
-  <build_depend>eigen_checks</build_depend>
-  <build_depend>message_generation</build_depend>
-  <build_depend>std_msgs</build_depend>
+
   <build_depend>roscpp</build_depend>
 
-  <depend>message_runtime</depend>
   <depend>sensor_msgs</depend>
   <depend>geometry_msgs</depend>
-  <depend>yaml-cpp</depend>
   <depend>angles</depend>
   <depend>tf2_ros</depend>
   <depend>tf2_eigen</depend>
