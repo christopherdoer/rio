@@ -115,8 +115,8 @@ Most of the parameters can be changed online using rqt_reconfigure. Further docu
 and in the python files, see [cfg](./cfg).
 
 Published topics are the same for both modes:
-- ~state ([msg/EkfRioState](msg/EkfRioState.msg)): full filter state (NED-convention)
-- ~covariance ([ekf_rio/EkfRioCovariance](msg/EkfRioCovariance.msg)): diagonal elements of covariance matrix
+- ~state ([ekf_rio/EkfRioState](../ekf_rio/msg/EkfRioState.msg)): full filter state (NED-convention)
+- ~covariance ([ekf_rio/EkfRioCovariance](../ekf_rio/msg/EkfRioCovariance.msg)): diagonal elements of covariance matrix
 - ~pose ([geometry_msgs/PoseStamped](http://docs.ros.org/en/api/geometry_msgs/html/msg/PoseStamped.html])): pose (ROS convention)
 - ~twist ([geometry_msgs/TwistStamped](http://docs.ros.org/en/api/geometry_msgs/html/msg/TwistStamped.html])): twist (ROS convention)
 - ~pose_path ([nav_msgs/Path](http://docs.ros.org/en/api/nav_msgs/html/msg/Path.html)): pose path (ROS convention)
