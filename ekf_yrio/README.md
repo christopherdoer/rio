@@ -4,6 +4,9 @@ This package extends [ekf_rio](../ekf_rio) with yaw aiding based on Manhattan wo
 We used an instantaneous approach which can provide yaw aiding without scan matching.
 In contrast to [ekf_rio](../ekf_rio), ekf_yrio estimates all IMU offsets (even the yaw rate offset) which results in
  accurate state estimation even on long indoor datasets.
+An evaluation with the [radar_inertial_datasets_icins_2021](https://christopherdoer.github.io/datasets/icins_2021_radar_inertial_odometry) shows that ekf_yrio achieves even 
+slightly better accuracies than the state of the art VIO framework [VINS (no loop closures)](https://github.com/HKUST-Aerial-Robotics/VINS-Fusion).
+We outperform VINS regarding runtime as ekf_yrio runs almost 90x faster than VINS!
 
 ## Cite
 If you use ekf_yrio or the provided datasets for your academic research, please cite our related paper:
@@ -19,20 +22,46 @@ If you use ekf_yrio or the provided datasets for your academic research, please 
 
 ## Paper Datasets
 All carried and flight datasets presented in our Paper "Yaw aided Radar Inertial Odometry uisng Manhattan World
- Assumptions" are available online: [radar_inertial_datasets_icins_2021](https://bwsyncandshare.kit.edu/s/75NYFkskLTfrGeG). These datasets also include pseudo ground truth which has been created using VINS
-  with loop closure.
+ Assumptions" are available online: [radar_inertial_datasets_icins_2021](https://christopherdoer.github.io/datasets/icins_2021_radar_inertial_odometry). 
+These datasets also include pseudo ground truth which has been created using [VINS (with loop closures)](https://github.com/HKUST-Aerial-Robotics/VINS-Fusion).
 
-## Demo Result
+## Demo Results
 
 ### Indoor Dataset "Carried 2"
 
 The image below shows the estimation result of ekf_yrio for the indoor dataset "carried_2" (part of
-  [radar_inertial_datasets_icins_2021](https://bwsyncandshare.kit.edu/s/75NYFkskLTfrGeG)).   
+  [radar_inertial_datasets_icins_2021](https://christopherdoer.github.io/datasets/icins_2021_radar_inertial_odometry)).   
 This dataset covers a trajectory length of 451m over a period of 392s whereas the start and end pose are equal.
  ekf_yrio achieved a final position error of 0.14% of the distance traveled. 
  Processing of the whole dataset took just 4.32s with an Intel NUC i7 and 36s with an UpCore embedded computer
   
 ![image](res/carried_2_ground_plan.jpg)
+
+### Results on Datasets: [radar_inertial_datasets_icins_2021](https://christopherdoer.github.io/datasets/icins_2021_radar_inertial_odometry)
+
+***Translation RMSE Carried Datasets*** 
+
+| Algorithm | carried_1 | carried_2 | carried_3 | carried_4 | carried_5 | Mean
+--- | --- | --- | --- | --- | --- | ---
+[VINS (no loop closures)](https://github.com/HKUST-Aerial-Robotics/VINS-Fusion) | ***0.21*** | 0.33 | 0.33 | 0.41 | ***0.20*** | 0.30
+[ekf_rio](../ekf_rio) w/o barometer  | 0.67 | 0.30 | 0.32 | 0.37 | 0.37 | 0.41
+[ekf_rio](../ekf_rio) with barometer   | 0.65 | 0.27 | 0.29 | 0.36 | 0.31 | 0.37
+ekf_yrio w/o barometer | 0.30 | ***0.23*** | 0.29 | 0.35 | 0.36 | 0.30
+ekf_yrio with barometer | 0.32 | 0.27 | ***0.23*** | ***0.31*** | 0.28 | ***0.28***
+
+    
+***Translation RMSE Flight Datasets***    
+
+| Algorithm | flight_1 | flight_2 | flight_3 | flight_4 | Mean
+--- | --- | --- | --- | --- | --- 
+[VINS (no loop closures)](https://github.com/HKUST-Aerial-Robotics/VINS-Fusion)  | 0.39 | 0.13 | ***0.17*** | 0.19 | 0.22
+[ekf_rio](../ekf_rio) w/o barometer  | 0.32 | 0.15 | 0.29 | 0.31 | 0.27
+[ekf_rio](../ekf_rio) with barometer   | 0.28 | 0.17 | 0.27 | 0.31 | 0.26
+ekf_yrio w/o barometer  | 0.27 | ***0.12*** | 0.31 | ***0.16*** | 0.22
+ekf_yrio with barometer  | ***0.23*** | 0.15 | 0.26 | ***0.16*** | ***0.20***
+
+***This analysis shows that ekf_yrio improves ekf_rio clearly achieving even slightly better mean translation RMSE than the state of the art VIO framework VINS!***   
+This analysis can be generated using a single script, see below "Run the radar_inertial_datasets_icins_2021".
 
 ## Getting Started
 
@@ -55,11 +84,25 @@ roslaunch ekf_yrio demo_datasets_ekf-yrio_ros.launch
 rosbag play --clock radar_inertial_datasets_icins_2021_carried_2.bag
 ~~~
 
-Run the [radar_inertial_datasets_icins_2021](https://bwsyncandshare.kit.edu/s/75NYFkskLTfrGeG) dataset:
+## Run the radar_inertial_datasets_icins_2021
+
+Run a single dataset (e.g. carried_1) of the [radar_inertial_datasets_icins_2021](https://christopherdoer.github.io/datasets/icins_2021_radar_inertial_odometry) dataset:
 
 ~~~[shell]
 roslaunch ekf_yrio icins2021_datasets_ekf-yrio_rosbag.launch dataset_dir:=<path_to_dataset> rosbag:=carried_1.bag
 ~~~
+
+Run and evaluate all runs of the [radar_inertial_datasets_icins_2021](https://christopherdoer.github.io/datasets/icins_2021_radar_inertial_odometry) dataset 
+(depends on [rpg_trajectory_evaluation](https://github.com/uzh-rpg/rpg_trajectory_evaluation)):
+
+~~~[shell]
+rosrun ekf_yrio icins_2021_evaluation.py _rosbag_base_dir:=<path_to_radar_inertial_datasets_icins_2021>
+~~~
+
+This will save the evaluation at <path_to_radar_inertial_datasets_icins_2021>/results for the carried and flight datasets.
+The estimation result of ekf_rio and ekf_yrio (with and w/o barometer fusion) are aligned with the ground truth and evaluated using 
+[rpg_trajectory_evaluation](https://github.com/uzh-rpg/rpg_trajectory_evaluation). 
+Plots and further error metrics are located at <path_to_radar_inertial_datasets_icins_2021>/results/<carried/flight>_datasets/evaluation_full_align.
 
 ## Nodes
 

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--This file is part of RIO - Radar Inertial Odometry and Radar based ego velocity estimation.-->
+<!--@author Christopher Doer <christopher.doer@kit.edu>-->
+
+<launch>
+    <arg name="dataset_dir"/>
+    <arg name="rosbag"/>
+    <arg name="ground_truth_csv"/>
+    <arg name="export_directory"/>
+    <arg name="pkg"/>
+
+    <arg name="altimeter_update"/>
+    <arg name="enable_yaw_aiding"/>
+
+    <param name="use_sim_time" value="False" type="bool"/>
+
+    <arg name="config"/>
+    <arg name="calibration" default="$(arg dataset_dir)/calib"/>
+
+    <arg name="bag_start" default="0"/>
+    <arg name="bag_duration" default="-1.0"/>
+    <arg name="filter_node_name" default="ekf_yrio"/>
+
+    <node name="$(arg filter_node_name)" pkg="$(arg pkg)" type="rosbag_node" output="screen" launch-prefix="bash -c 'sleep 2; $0 $@' ">
+        <rosparam file="$(find ekf_yrio)/config/$(arg config).yaml" command="load" ns=""/>
+        <rosparam file="$(arg calibration).yaml" command="load" ns=""/>
+        <param name="rosbag_path" value="$(arg dataset_dir)/$(arg rosbag)" type="string"/>
+        <param name="bag_start" value="$(arg bag_start)" type="double"/>
+        <param name="bag_duration" value="$(arg bag_duration)" type="double"/>
+        <param name="republish_ground_truth" value="true" type="bool"/>
+        <param name="b_0_w_z_deg" value="-0.1" type="double"/>
+        <param name="altimeter_update" value="$(arg altimeter_update)" type="bool"/>
+        <param name="enable_yaw_aiding" value="$(arg enable_yaw_aiding)" type="bool"/>
+    </node>
+
+    <node pkg="ekf_yrio" type="evaluate_ground_truth.py" name="evaluate_ground_truth" output="screen" clear_params="true" required="True">
+        <param name="rosbag_name" type="str" value="$(arg rosbag)"/>
+        <param name="rosbag_dir" type="str" value="$(arg dataset_dir)"/>
+        <param name="ground_truth_csv" type="str" value="$(arg ground_truth_csv)"/>
+        <param name="pose_topic" type="str" value="$(arg filter_node_name)/pose"/>
+        <param name="export_directory" type="str" value="$(arg export_directory)"/>
+    </node>
+
+</launch>

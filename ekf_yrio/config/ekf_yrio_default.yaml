@@ -1,5 +1,5 @@
 # Default parameters for the demo datasets
-# Documentation of the paramters can be found in the corresponding reconfigure files (see <package_name>/cfg/<package_name>/*.py)
+# Documentation of the parameters can be found in the corresponding reconfigure files (see <package_name>/cfg/<package_name>/*.py)
 # running rqt_reconfigure also provides tooltip text for the parameters and allows for online tuning
 
 # General
@@ -30,7 +30,7 @@ enable_yaw_aiding: True
 radar_update: True
 
 # Radar Measurement Model
-outlier_percentil_radar: 0.05
+outlier_percentil_radar: 0.1
 use_w: True
 
 # Radar Ego Velocity Estimation
@@ -47,9 +47,9 @@ sigma_zero_velocity_x: 0.025 # right
 sigma_zero_velocity_y: 0.025 # forward
 sigma_zero_velocity_z: 0.025 # up
 
-sigma_offset_radar_x: 0.05   # right
-sigma_offset_radar_y: 0.025  # forward
-sigma_offset_radar_z: 0.05  # up
+sigma_offset_radar_x: 0.075   # right
+sigma_offset_radar_y: 0.05  # forward
+sigma_offset_radar_z: 0.075  # up
 
 max_sigma_x: 0.2   # right
 max_sigma_y: 0.15  # forward
