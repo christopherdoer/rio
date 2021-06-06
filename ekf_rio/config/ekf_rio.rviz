@@ -26,7 +26,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: Inlier Point Cloud
+    SyncSource: ""
 Toolbars:
   toolButtonStyle: 2
 Visualization Manager:
@@ -59,8 +59,6 @@ Visualization Manager:
           Value: true
         odom:
           Value: true
-        odom_ros:
-          Value: true
         radar:
           Value: true
       Marker Scale: 1
@@ -69,11 +67,10 @@ Visualization Manager:
       Show Axes: true
       Show Names: true
       Tree:
-        odom_ros:
-          odom:
-            base_link:
-              radar:
-                {}
+        odom:
+          base_link:
+            radar:
+              {}
       Update Interval: 0
       Value: true
     - Alpha: 1
@@ -133,7 +130,7 @@ Visualization Manager:
   Global Options:
     Background Color: 48; 48; 48
     Default Light: true
-    Fixed Frame: odom_ros
+    Fixed Frame: odom
     Frame Rate: 30
   Name: root
   Tools:

@@ -70,3 +70,13 @@ Our ekf_yrio implementation provides two nodes for ROS interfacing:
 A set of demo parameters is given in [ekf_yrio_default](./config/ekf_yrio_default.yaml).
 Most of the parameters can be changed online using rqt_reconfigure. Further documentation of the parameters can be found using the tooltip text in rqt_reconfigure
 and in the python files, see [cfg](./cfg).
+
+Published topics are the same for both modes:
+- ~state ([msg/EkfRioState](msg/EkfRioState.msg)): full filter state (NED-convention)
+- ~covariance ([ekf_rio/EkfRioCovariance](msg/EkfRioCovariance.msg)): diagonal elements of covariance matrix
+- ~pose ([geometry_msgs/PoseStamped](http://docs.ros.org/en/api/geometry_msgs/html/msg/PoseStamped.html])): pose (ROS convention)
+- ~twist ([geometry_msgs/TwistStamped](http://docs.ros.org/en/api/geometry_msgs/html/msg/TwistStamped.html])): twist (ROS convention)
+- ~pose_path ([nav_msgs/Path](http://docs.ros.org/en/api/nav_msgs/html/msg/Path.html)): pose path (ROS convention)
+- ~radar_scan_inlier ([sensor_msgs/PointCloud2](http://docs.ros.org/en/api/sensor_msgs/html/msg/PointCloud2.html)): radar scan inlier used for velocity estimation
+- ~yaw_aiding_init ([sensor_msgs/PointCloud2](http://docs.ros.org/en/api/sensor_msgs/html/msg/PointCloud2.html)): all radar scan point used for Manhattan angle init
+- ~radar_scan_yaw_inlier ([sensor_msgs/PointCloud2](http://docs.ros.org/en/api/sensor_msgs/html/msg/PointCloud2.html)): radar scan point used for yaw aiding

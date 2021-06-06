@@ -55,7 +55,7 @@ EkfYRioRos::EkfYRioRos(ros::NodeHandle& nh) : yaw_aiding_manhattan_world_(nh), i
   pub_pose_              = nh.advertise<geometry_msgs::PoseStamped>("pose", 1);
   pub_twist_             = nh.advertise<geometry_msgs::TwistStamped>("twist", 1);
   pub_radar_scan_inlier_ = nh.advertise<sensor_msgs::PointCloud2>("radar_scan_inlier", 10);
-  pub_radar_yaw_inlier_  = nh.advertise<sensor_msgs::PointCloud2>("pcl_inlier", 1);
+  pub_radar_yaw_inlier_  = nh.advertise<sensor_msgs::PointCloud2>("radar_scan_yaw_inlier", 1);
 
   if (config_.republish_ground_truth)
   {
@@ -381,11 +381,8 @@ void EkfYRioRos::iterate()
               {
                 Real yaw_m;
                 sensor_msgs::PointCloud2 yaw_inlier_pcl_msg;
-                bool yaw_estimation_successful =
-                    yaw_aiding_manhattan_world_.update(inlier_radar_scan,
-                                                       ekf_yrio_filter_.getRadarCloneState(),
-                                                       yaw_m,
-                                                       yaw_inlier_pcl_msg);
+                bool yaw_estimation_successful = yaw_aiding_manhattan_world_.update(
+                    inlier_radar_scan, ekf_yrio_filter_.getRadarCloneState(), yaw_m, yaw_inlier_pcl_msg);
                 if (yaw_estimation_successful)
                 {
                   bool yaw_inlier = ekf_yrio_filter_.updateYaw(
@@ -455,20 +452,20 @@ void EkfYRioRos::callbackRadarTrigger(const std_msgs::HeaderConstPtr& trigger_ms
 void EkfYRioRos::publish()
 {
   const NavigationSolution nav_sol = ekf_yrio_filter_.getNavigationSolution();
-  const Isometry pose              = nav_sol.pose_n_b;
+  const Isometry pose_ros          = nav_sol.getPoseRos();
 
   // pose
   geometry_msgs::PoseStamped pose_stamped;
   pose_stamped.header.stamp    = ekf_yrio_filter_.getTimestamp();
   pose_stamped.header.frame_id = config_.frame_id;
-  pose_stamped.pose            = tf2::toMsg(pose);
+  pose_stamped.pose            = tf2::toMsg(pose_ros);
   pub_pose_.publish(pose_stamped);
 
   // twist
   geometry_msgs::TwistStamped twist_stamped;
   twist_stamped.header = pose_stamped.header;
-  tf2::toMsg(nav_sol.v_n_b, twist_stamped.twist.linear);
-  tf2::toMsg(imu_data_.w_b_ib - ekf_yrio_filter_.getBias().gyro, twist_stamped.twist.angular);
+  tf2::toMsg(nav_sol.getVelocityRos(), twist_stamped.twist.linear);
+  tf2::toMsg(pose_ros.linear() * (imu_data_.w_b_ib - ekf_yrio_filter_.getBias().gyro), twist_stamped.twist.angular);
   pub_twist_.publish(twist_stamped);
 
   // pose path
@@ -488,7 +485,7 @@ void EkfYRioRos::publish()
 
   // tf global -> body
   geometry_msgs::TransformStamped T_global_body;
-  T_global_body                = tf2::eigenToTransform(pose);
+  T_global_body                = tf2::eigenToTransform(pose_ros);
   T_global_body.header         = pose_stamped.header;
   T_global_body.child_frame_id = body_frame_id_;
   tf_broadcaster_.sendTransform(T_global_body);
@@ -500,20 +497,6 @@ void EkfYRioRos::publish()
   T_body_radar.header.frame_id = body_frame_id_;
   T_body_radar.child_frame_id  = radar_frame_id_;
   tf_broadcaster_.sendTransform(T_body_radar);
-
-  // tf ros (front-left-up) -> global (we are using NED or front-right-down)
-  geometry_msgs::TransformStamped T_ros_global;
-  T_ros_global.header.stamp            = ekf_yrio_filter_.getTimestamp();
-  T_ros_global.header.frame_id         = config_.frame_id + "_ros";
-  T_ros_global.child_frame_id          = config_.frame_id;
-  T_ros_global.transform.translation.x = 0;
-  T_ros_global.transform.translation.y = 0;
-  T_ros_global.transform.translation.z = 0;
-  T_ros_global.transform.rotation.x    = 1;
-  T_ros_global.transform.rotation.y    = 0;
-  T_ros_global.transform.rotation.z    = 0;
-  T_ros_global.transform.rotation.w    = 0;
-  tf_broadcaster_.sendTransform(T_ros_global);
 }
 
 void EkfYRioRos::printStats()

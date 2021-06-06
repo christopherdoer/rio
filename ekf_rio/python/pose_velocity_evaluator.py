@@ -103,7 +103,7 @@ class PoseVelocityEvaluator:
         yaw_filter_0 = quat_to_euler(pose_filter[0, 4:])[2]
         yaw_gt_0 = quat_to_euler(pose_gt[0, 4:])[2]
 
-        C = euler_to_rot_mat([np.pi, 0, yaw_gt_0 - yaw_filter_0])
+        C = euler_to_rot_mat([0, 0, yaw_gt_0 - yaw_filter_0])
 
         p_filter_rot_raw = C.dot(pose_filter_raw[:, 1:4].transpose()).transpose()
         p_filter_rot_raw = p_filter_rot_raw - (p_filter_rot_raw[0, :] - p_0_gt)
@@ -120,6 +120,7 @@ class PoseVelocityEvaluator:
         err_p = p_filter_rot - p_gt_inter
         err_v = v_filter_rot - v_gt_inter
 
+        print("Alignment with ground truth is done using pos-yaw on the first ground truth state")
         self.print_stats(err_p, "Position Error Analysis")
         self.print_stats(err_v, "Velocity Error Analysis")
 

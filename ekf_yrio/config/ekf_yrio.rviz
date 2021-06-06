@@ -60,8 +60,6 @@ Visualization Manager:
           Value: true
         odom:
           Value: true
-        odom_ros:
-          Value: true
         radar:
           Value: true
       Marker Scale: 1
@@ -70,11 +68,10 @@ Visualization Manager:
       Show Axes: true
       Show Names: true
       Tree:
-        odom_ros:
-          odom:
-            base_link:
-              radar:
-                {}
+        odom:
+          base_link:
+            radar:
+              {}
       Update Interval: 0
       Value: true
     - Alpha: 1
@@ -142,7 +139,7 @@ Visualization Manager:
       Color: 0; 0; 250
       Color Transformer: FlatColor
       Decay Time: 0
-      Enabled: false
+      Enabled: true
       Invert Rainbow: false
       Max Color: 0; 0; 255
       Max Intensity: 43.0999985
@@ -155,11 +152,11 @@ Visualization Manager:
       Size (Pixels): 3
       Size (m): 0.100000001
       Style: Flat Squares
-      Topic: /ekf_yrio/pcl_init
+      Topic: /ekf_yrio/yaw_aiding_init
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: false
-      Value: false
+      Value: true
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
@@ -172,12 +169,12 @@ Visualization Manager:
       Color: 255; 255; 255
       Color Transformer: Intensity
       Decay Time: 1000
-      Enabled: false
+      Enabled: true
       Invert Rainbow: false
       Max Color: 255; 255; 255
-      Max Intensity: 19.5
+      Max Intensity: 13
       Min Color: 0; 0; 0
-      Min Intensity: 19.5
+      Min Intensity: 13
       Name: Yaw Inlier
       Position Transformer: XYZ
       Queue Size: 1
@@ -185,16 +182,16 @@ Visualization Manager:
       Size (Pixels): 3
       Size (m): 0.100000001
       Style: Flat Squares
-      Topic: /ekf_yrio/pcl_inlier
+      Topic: /ekf_yrio/radar_scan_yaw_inlier
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true
-      Value: false
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
     Default Light: true
-    Fixed Frame: odom_ros
+    Fixed Frame: odom
     Frame Rate: 30
   Name: root
   Tools:

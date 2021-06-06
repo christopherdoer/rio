@@ -432,20 +432,20 @@ void EkfRioRos::callbackRadarTrigger(const std_msgs::HeaderConstPtr& trigger_msg
 void EkfRioRos::publish()
 {
   const NavigationSolution nav_sol = ekf_rio_filter_.getNavigationSolution();
-  const Isometry pose              = nav_sol.pose_n_b;
+  const Isometry pose_ros          = nav_sol.getPoseRos();
 
   // pose
   geometry_msgs::PoseStamped pose_stamped;
   pose_stamped.header.stamp    = ekf_rio_filter_.getTimestamp();
   pose_stamped.header.frame_id = config_.frame_id;
-  pose_stamped.pose            = tf2::toMsg(pose);
+  pose_stamped.pose            = tf2::toMsg(pose_ros);
   pub_pose_.publish(pose_stamped);
 
   // twist
   geometry_msgs::TwistStamped twist_stamped;
   twist_stamped.header = pose_stamped.header;
-  tf2::toMsg(nav_sol.v_n_b, twist_stamped.twist.linear);
-  tf2::toMsg(imu_data_.w_b_ib - ekf_rio_filter_.getBias().gyro, twist_stamped.twist.angular);
+  tf2::toMsg(nav_sol.getVelocityRos(), twist_stamped.twist.linear);
+  tf2::toMsg(pose_ros.linear() * (imu_data_.w_b_ib - ekf_rio_filter_.getBias().gyro), twist_stamped.twist.angular);
   pub_twist_.publish(twist_stamped);
 
   // pose path
@@ -465,7 +465,7 @@ void EkfRioRos::publish()
 
   // tf global -> body
   geometry_msgs::TransformStamped T_global_body;
-  T_global_body                = tf2::eigenToTransform(pose);
+  T_global_body                = tf2::eigenToTransform(pose_ros);
   T_global_body.header         = pose_stamped.header;
   T_global_body.child_frame_id = body_frame_id_;
   tf_broadcaster_.sendTransform(T_global_body);
@@ -477,20 +477,6 @@ void EkfRioRos::publish()
   T_body_radar.header.frame_id = body_frame_id_;
   T_body_radar.child_frame_id  = radar_frame_id_;
   tf_broadcaster_.sendTransform(T_body_radar);
-
-  // tf ros (front-left-up) -> global (we are using NED or front-right-down)
-  geometry_msgs::TransformStamped T_ros_global;
-  T_ros_global.header.stamp            = ekf_rio_filter_.getTimestamp();
-  T_ros_global.header.frame_id         = config_.frame_id + "_ros";
-  T_ros_global.child_frame_id          = config_.frame_id;
-  T_ros_global.transform.translation.x = 0;
-  T_ros_global.transform.translation.y = 0;
-  T_ros_global.transform.translation.z = 0;
-  T_ros_global.transform.rotation.x    = 1;
-  T_ros_global.transform.rotation.y    = 0;
-  T_ros_global.transform.rotation.z    = 0;
-  T_ros_global.transform.rotation.w    = 0;
-  tf_broadcaster_.sendTransform(T_ros_global);
 }
 
 void EkfRioRos::printStats()

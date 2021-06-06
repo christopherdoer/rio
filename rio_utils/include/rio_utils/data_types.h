@@ -114,6 +114,15 @@ struct NavigationSolution
 
   Matrix3 getC_n_b() const { return pose_n_b.linear(); }
 
+  Isometry getPoseRos() const
+  {
+    tf2::Quaternion q_n_b;
+    q_n_b.setRPY(M_PI, 0, 0);
+    return Matrix3(Quaternion(q_n_b.w(), q_n_b.x(), q_n_b.y(), q_n_b.z())) * pose_n_b;
+  }
+
+  Vector3 getVelocityRos() const { return Vector3(v_n_b.x(), -v_n_b.y(), -v_n_b.z()); }
+
   Isometry pose_n_b;  // position and attitude in navigation frame
   Vector3 v_n_b;      // [m/s]
 

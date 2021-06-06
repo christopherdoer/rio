@@ -39,6 +39,7 @@ struct RadarDetection
     p_body   = radar_state.T_b_r.linear() * p_radar;  // - radar_state.T_b_r.translation();
     p_stab_n = radar_state.nav_sol.getC_n_b() * p_body;
     p_n      = radar_state.nav_sol.getC_n_b() * p_body + radar_state.nav_sol.getPosition_n_b();
+    p_ros    = radar_state.nav_sol.getPoseRos() * radar_state.T_b_r * p_radar;
 
     NavigationSolution stab_tmp;
     stab_tmp.setEuler_n_b(
@@ -63,6 +64,7 @@ struct RadarDetection
   Vector3 p_stab_n;
   Vector3 p_stab;
   Vector3 p_n;
+  Vector3 p_ros;
 
   Matrix3 C_n_b;
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW

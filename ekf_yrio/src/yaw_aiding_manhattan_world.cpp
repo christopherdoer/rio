@@ -23,8 +23,8 @@ using namespace rio;
 
 YawAidingManhattanWorld::YawAidingManhattanWorld(ros::NodeHandle& nh)
 {
-  pub_filtered_ = nh.advertise<sensor_msgs::PointCloud2>("pcl_filtered", 1);
-  pub_init_     = nh.advertise<sensor_msgs::PointCloud2>("pcl_init", 1);
+  pub_filtered_ = nh.advertise<sensor_msgs::PointCloud2>("yaw_aiding_filtered", 1);
+  pub_init_     = nh.advertise<sensor_msgs::PointCloud2>("yaw_aiding_init", 1);
 }
 
 bool YawAidingManhattanWorld::update(const sensor_msgs::PointCloud2& radar_scan_msg,
@@ -236,7 +236,7 @@ void YawAidingManhattanWorld::convertToPcl(const RadarDetections& detections,
     if (use_p_r)
       p.getVector3fMap() = Eigen::Vector3f(detection.p_radar.x(), detection.p_radar.y(), detection.p_radar.z());
     else
-      p.getVector3fMap() = Eigen::Vector3f(detection.p_n.x(), detection.p_n.y(), detection.p_n.z());
+      p.getVector3fMap() = Eigen::Vector3f(detection.p_ros.x(), detection.p_ros.y(), detection.p_ros.z());
 
     p._PointXYZI::intensity = detection.snr;
     point_cloud_xyzi.push_back(p);

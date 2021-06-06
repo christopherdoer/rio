@@ -4,9 +4,11 @@ This package provides an efficient C++ implementation of EKF-based Radar Inertia
  the radar sensor extrinsic calibration.
 Based on a single radar scan, the 3D radar ego velocity is estimated using the [radar_ego_velocity_estimation](../radar_ego_velocity_estimation) package.
 Fusion with intertial data is carried out using an Error State EKF.
-In addition, barometer measurements can be fuses as well for improved z-axis estimation.
-We are using the North East Down (NED) convention.
-Thus, the z-axis points downwards.
+In addition, barometer measurements can be fused as well for improved z-axis estimation.
+We are using the North East Down (NED) convention within our navigation filter.
+Thus, the published filter state follows that convention.
+The publishers of the pose and twist topics, however, follow the ROS convention [REP-103](https://www.ros.org/reps/rep-0103.html).
+Details on the published topics are provided below.
 
 ## Cite
 If you use ekf_rio for your academic research, please cite our related paper:
@@ -86,5 +88,12 @@ Our ekf_rio implementation provides two node for ROS interfacing:
 - ***rosbag_node:*** Reads a rosbag and runs ekf_rio at maximum speed
 
 A set of demo parameters is given in [ekf_rio_default](./config/ekf_rio_default.yaml).
-Most of the parameters can be changed online using rqt_reconfigure. Further documentation of the parameters can be
- found using the tooltip text in rqt_reconfigure and in the python files, see [cfg](./cfg).
+Most of the parameters can be changed online using rqt_reconfigure. Further documentation of the parameters can be found using the tooltip text in rqt_reconfigure and in the python files, see [cfg](./cfg).
+
+Published topics are the same for both modes:
+- ~state ([msg/EkfRioState](msg/EkfRioState.msg)): full filter state (NED-convention)
+- ~covariance ([ekf_rio/EkfRioCovariance](msg/EkfRioCovariance.msg)): diagonal elements of covariance matrix
+- ~pose ([geometry_msgs/PoseStamped](http://docs.ros.org/en/api/geometry_msgs/html/msg/PoseStamped.html])): pose (ROS convention)
+- ~twist ([geometry_msgs/TwistStamped](http://docs.ros.org/en/api/geometry_msgs/html/msg/TwistStamped.html])): twist (ROS convention)
+- ~pose_path ([nav_msgs/Path](http://docs.ros.org/en/api/nav_msgs/html/msg/Path.html)): pose path (ROS convention)
+- ~radar_scan_inlier ([sensor_msgs/PointCloud2](http://docs.ros.org/en/api/sensor_msgs/html/msg/PointCloud2.html)): radar scan inlier used for velocity estimation
