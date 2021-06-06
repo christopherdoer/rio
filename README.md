@@ -9,6 +9,8 @@ Therefore, we are using mmWave FMCW radar and inertial sensor data as these are 
 - Demonstrated for online navigation of drones even in confined indoor environments
 
 ## News
+- 06/2021: The radar inertial datasets with pseudo ground truth used in our [Yaw aided Radar Inertial Odometry](https://christopherdoer.github.io/publication/2021_05_ICINS2021) paper are released: [radar_inertial_datasets_icins_2021](https://christopherdoer.github.io/datasets/icins_2021_radar_inertial_odometry). 
+  Both ekf_rio and ekf_yrio can be evaluated on the whole dataset with a single [script](ekf_yrio/python/icins_2021_evaluation.py).
 - 05/2021: Initial release of RIO - Radar Inertial Odometry and Radar based ego velocity estimation.
 
 ## Introduction
@@ -65,6 +67,7 @@ Our implementation depends on:
 - Ubuntu 16.04 and ROS Kinetic
 - [catkin_simple](https://github.com/catkin/catkin_simple.git)  
 - [catkin_tools](https://catkin-tools.readthedocs.io/en/latest/) (for convenience)
+- [rpg_trajectory_evaluation](https://github.com/uzh-rpg/rpg_trajectory_evaluation) (optional, for comprehensive evaluation)
 
 Build in Release is recommended:
 ~~~[shell]
