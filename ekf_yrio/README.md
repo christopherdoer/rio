@@ -8,6 +8,8 @@ An evaluation with the [radar_inertial_datasets_icins_2021](https://christopherd
 slightly better accuracies than the state of the art VIO framework [VINS (no loop closures)](https://github.com/HKUST-Aerial-Robotics/VINS-Fusion).
 We outperform VINS regarding runtime as ekf_yrio runs almost 90x faster than VINS!
 
+Check out our paper for more details [Yaw aided Radar Inertial Odometry uisng Manhattan World Assumptions](https://christopherdoer.github.io/publication/2021_05_ICINS2021).
+
 ## Cite
 If you use ekf_yrio or the provided datasets for your academic research, please cite our related paper:
 
@@ -45,10 +47,9 @@ This dataset covers a trajectory length of 451m over a period of 392s whereas th
 --- | --- | --- | --- | --- | --- | ---
 [VINS (no loop closures)](https://github.com/HKUST-Aerial-Robotics/VINS-Fusion) | ***0.21*** | 0.33 | 0.33 | 0.41 | ***0.20*** | 0.30
 [ekf_rio](../ekf_rio) w/o barometer  | 0.67 | 0.30 | 0.32 | 0.37 | 0.37 | 0.41
-[ekf_rio](../ekf_rio) with barometer   | 0.65 | 0.27 | 0.29 | 0.36 | 0.31 | 0.37
+[ekf_rio](../ekf_rio) w/ barometer   | 0.65 | 0.27 | 0.29 | 0.36 | 0.31 | 0.37
 ekf_yrio w/o barometer | 0.30 | ***0.23*** | 0.29 | 0.35 | 0.36 | 0.30
-ekf_yrio with barometer | 0.32 | 0.27 | ***0.23*** | ***0.31*** | 0.28 | ***0.28***
-
+ekf_yrio w/ barometer | 0.32 | 0.27 | ***0.23*** | ***0.31*** | 0.28 | ***0.28***
     
 ***Translation RMSE Flight Datasets***    
 
@@ -60,8 +61,13 @@ ekf_yrio with barometer | 0.32 | 0.27 | ***0.23*** | ***0.31*** | 0.28 | ***0.28
 ekf_yrio w/o barometer  | 0.27 | ***0.12*** | 0.31 | ***0.16*** | 0.22
 ekf_yrio with barometer  | ***0.23*** | 0.15 | 0.26 | ***0.16*** | ***0.20***
 
+***Relative Errors***
+
+![image](res/relative_errors_carried_flight_icins2021.png) 
+
 ***This analysis shows that ekf_yrio improves ekf_rio clearly achieving even slightly better mean translation RMSE than the state of the art VIO framework VINS!***   
-This analysis can be generated using a single script, see below "Run the radar_inertial_datasets_icins_2021".
+This analysis can be generated using a single [script](./python/icins_2021_evaluation.py), see below "Run the radar_inertial_datasets_icins_2021".
+
 
 ## Getting Started
 
