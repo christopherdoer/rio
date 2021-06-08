@@ -29,7 +29,7 @@ struct EkfRioFilterStateIdx
   const uint bias_gyro               = 12;
   const uint bias_alt                = 15;
   const uint l_b_r                   = 16;
-  const uint eul_l_b_r               = 19;
+  const uint eul_b_r                 = 19;
   const uint base_state_length       = 22;
   const uint prob_noise_state_length = 15;
   const uint sc_position             = 22 + 0;
@@ -37,7 +37,7 @@ struct EkfRioFilterStateIdx
   const uint sc_attitude             = 22 + 6;
   const uint sc_bias_gyro            = 22 + 9;
   const uint sc_l_b_r                = 22 + 12;
-  const uint sc_eul_l_b_r            = 22 + 15;
+  const uint sc_eul_b_r              = 22 + 15;
   const uint radar_clone_length      = 18;
 };
 
@@ -147,7 +147,7 @@ struct InitStruct
     P_kk_0.block(error.l_b_r, error.l_b_r, 3, 3).diagonal() =
         Vector3(config.sigma_l_b_r_x, config.sigma_l_b_r_y, config.sigma_l_b_r_z).array().pow(2);
 
-    P_kk_0.block(error.eul_l_b_r, error.eul_l_b_r, 3, 3).diagonal() =
+    P_kk_0.block(error.eul_b_r, error.eul_b_r, 3, 3).diagonal() =
         Vector3(angles::from_degrees(config.sigma_eul_b_r_roll_deg),
                 angles::from_degrees(config.sigma_eul_b_r_pitch_deg),
                 angles::from_degrees(config.sigma_eul_b_r_yaw_deg))

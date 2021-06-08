@@ -157,6 +157,14 @@ protected:
    */
   bool kfUpdate(const Vector& r, const Matrix& H, const Vector& R_diag);
 
+  /**
+   * @brief Returns the corrected quaternion based on the given euler error and quaternion (Hamilton convention!)
+   * @param err_euler   Euler error angle
+   * @param q           Quaterion to be corrected
+   * @returns the corrected quaternion
+   */
+  Quaternion getCorrectedQuaternion(const Vector3& err_euler, const Quaternion& q) const;
+
   std::string kStreamingPrefix = "[EkfRioFilter]: ";
 
   Strapdown strapdown_;

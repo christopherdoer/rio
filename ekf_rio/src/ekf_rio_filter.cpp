@@ -117,26 +117,16 @@ bool EkfRioFilter::correctNominalState(const Vector x_error)
 {
   nav_sol_.setPosition_n_b(nav_sol_.getPosition_n_b() - x_error.segment(error_idx_.position, 3));
   nav_sol_.v_n_b -= x_error.segment(error_idx_.velocity, 3);
-
-  const Quaternion q_corr(1,
-                          -0.5 * x_error(error_idx_.attitude),
-                          -0.5 * x_error(error_idx_.attitude + 1),
-                          -0.5 * x_error(error_idx_.attitude + 2));
-  const Quaternion q_corrected = math_helper::quaternionMultiplicationHamilton(q_corr, nav_sol_.getQuaternion_n_b());
-  nav_sol_.setQuaternion(q_corrected);
+  nav_sol_.setQuaternion(getCorrectedQuaternion(x_error.segment(error_idx_.attitude, 3), nav_sol_.getQuaternion_n_b()));
 
   bias_.acc -= x_error.segment(error_idx_.bias_acc, 3);
   bias_.gyro -= x_error.segment(error_idx_.bias_gyro, 3);
   bias_.alt -= x_error(error_idx_.bias_alt);
 
   T_b_r_.translation() = T_b_r_.translation() - x_error.segment(error_idx_.l_b_r, 3);
-  const Quaternion q_corr_b_r(1,
-                              -0.5 * x_error(error_idx_.eul_l_b_r),
-                              -0.5 * x_error(error_idx_.eul_l_b_r + 1),
-                              -0.5 * x_error(error_idx_.eul_l_b_r + 2));
-  const Quaternion q_corrected_b_r =
-      math_helper::quaternionMultiplicationHamilton(q_corr_b_r, Quaternion(T_b_r_.linear()));
-  T_b_r_.linear() = q_corrected_b_r.normalized().toRotationMatrix();
+  T_b_r_.linear()      = getCorrectedQuaternion(x_error.segment(error_idx_.eul_b_r, 3), Quaternion(T_b_r_.linear()))
+                        .normalized()
+                        .toRotationMatrix();
 
   if (covariance_.rows() > error_idx_.base_state_length)
   {
@@ -144,23 +134,15 @@ bool EkfRioFilter::correctNominalState(const Vector x_error)
                                                x_error.segment(error_idx_.sc_position, 3));
     radar_clone_state_.nav_sol.v_n_b -= x_error.segment(error_idx_.sc_velocity, 3);
 
-    const Quaternion q_corr(1,
-                            -0.5 * x_error(error_idx_.sc_attitude),
-                            -0.5 * x_error(error_idx_.sc_attitude + 1),
-                            -0.5 * x_error(error_idx_.sc_attitude + 2));
-    const Quaternion q_corrected =
-        math_helper::quaternionMultiplicationHamilton(q_corr, radar_clone_state_.nav_sol.getQuaternion_n_b());
-    radar_clone_state_.nav_sol.setQuaternion(q_corrected);
+    radar_clone_state_.nav_sol.setQuaternion(getCorrectedQuaternion(x_error.segment(error_idx_.sc_attitude, 3),
+                                                                    radar_clone_state_.nav_sol.getQuaternion_n_b()));
 
     radar_clone_state_.T_b_r.translation() =
         radar_clone_state_.T_b_r.translation() - x_error.segment(error_idx_.sc_l_b_r, 3);
-    const Quaternion q_corr_b_r(1,
-                                -0.5 * x_error(error_idx_.sc_eul_l_b_r),
-                                -0.5 * x_error(error_idx_.sc_eul_l_b_r + 1),
-                                -0.5 * x_error(error_idx_.sc_eul_l_b_r + 2));
-    const Quaternion q_corrected_b_r =
-        math_helper::quaternionMultiplicationHamilton(q_corr_b_r, Quaternion(radar_clone_state_.T_b_r.linear()));
-    radar_clone_state_.T_b_r.linear() = q_corrected_b_r.normalized().toRotationMatrix();
+    radar_clone_state_.T_b_r.linear() =
+        getCorrectedQuaternion(x_error.segment(error_idx_.sc_eul_b_r, 3), Quaternion(radar_clone_state_.T_b_r.linear()))
+            .normalized()
+            .toRotationMatrix();
   }
 
   return true;
@@ -207,7 +189,7 @@ bool EkfRioFilter::removeRadarStateClone()
     radar_clone_state_.time_stamp         = ros::TIME_MIN;
     radar_clone_state_.trigger_time_stamp = ros::TIME_MIN;
 
-    // Eigen fuck: first row gets randomly zeros if no tmp used
+    // workaround: first row gets randomly zeros if no tmp used
     const Matrix covariance_tmp = covariance_;
     covariance_ = covariance_tmp.topLeftCorner(error_idx_.base_state_length, error_idx_.base_state_length);
 
@@ -245,17 +227,17 @@ bool EkfRioFilter::updateRadarEgoVelocity(const Vector3 v_r,
   Vector r(3);
   Vector R_diag(3);
 
-  const Matrix C_n_b  = getRadarCloneState().nav_sol.getC_n_b();
-  const Matrix C_b_r  = getRadarCloneState().T_b_r.linear();
-  const Vector3 l_b_r = getRadarCloneState().T_b_r.translation();
+  const Matrix C_n_b   = getRadarCloneState().nav_sol.getC_n_b();
+  const Matrix C_b_r   = getRadarCloneState().T_b_r.linear();
+  const Vector3 l_b_br = getRadarCloneState().T_b_r.translation();
 
-  const Vector3 v_w   = math_helper::skewVec(w - getRadarCloneState().offset_gyro) * l_b_r;
+  const Vector3 v_w   = math_helper::skewVec(w - getRadarCloneState().offset_gyro) * l_b_br;
   const Vector3 v_n_b = getRadarCloneState().nav_sol.v_n_b;
   const Vector3 v_b   = C_n_b.transpose() * v_n_b;
 
   const Matrix3 H_v     = C_b_r.transpose() * C_n_b.transpose();
   const Matrix3 H_q     = C_b_r.transpose() * C_n_b.transpose() * math_helper::skewVec(v_n_b);
-  const Matrix3 H_bg    = -C_b_r.transpose() * math_helper::skewVec(l_b_r);
+  const Matrix3 H_bg    = -C_b_r.transpose() * math_helper::skewVec(l_b_br);
   const Matrix3 H_l_b_r = C_b_r.transpose() * math_helper::skewVec(w);
   const Matrix3 H_q_b_r = C_b_r.transpose() * math_helper::skewVec(v_w + v_b);
 
@@ -263,11 +245,11 @@ bool EkfRioFilter::updateRadarEgoVelocity(const Vector3 v_r,
   H.block(0, getErrorIdx().sc_attitude, 3, 3)  = H_q;
   H.block(0, getErrorIdx().sc_bias_gyro, 3, 3) = H_bg;
   H.block(0, getErrorIdx().sc_l_b_r, 3, 3)     = H_l_b_r;
-  H.block(0, getErrorIdx().sc_eul_l_b_r, 3, 3) = H_q_b_r;
+  H.block(0, getErrorIdx().sc_eul_b_r, 3, 3)   = H_q_b_r;
 
-  const Vector3 v_filter = C_b_r.transpose() * (v_w + v_b);
+  const Vector3 v_r_filter = C_b_r.transpose() * (v_w + v_b);
 
-  r      = v_filter - v_r;
+  r      = v_r_filter - v_r;
   R_diag = (sigma_v_r).array().square();
 
   // outlier rejection
@@ -292,4 +274,10 @@ bool EkfRioFilter::updateRadarEgoVelocity(const Vector3 v_r,
     kfUpdate(r, H, R_diag);
 
   return true;
+}
+
+Quaternion EkfRioFilter::getCorrectedQuaternion(const Vector3& err_euler, const Quaternion& q) const
+{
+  return math_helper::quaternionMultiplicationHamilton(
+      Quaternion(1, -0.5 * err_euler.x(), -0.5 * err_euler.y(), -0.5 * err_euler.z()), q);
 }

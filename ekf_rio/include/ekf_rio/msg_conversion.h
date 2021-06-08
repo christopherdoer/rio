@@ -110,9 +110,9 @@ static inline ekf_rio::EkfRioCovariance toCovMsg(const EkfRioFilter& ekf_rio_fil
 
   cov_msg.sigma_alt = std::sqrt(C(idx.bias_alt, idx.bias_alt));
 
-  cov_msg.sigma_eul_b_r_deg.x = angles::to_degrees(std::sqrt(C(idx.eul_l_b_r, idx.eul_l_b_r)));
-  cov_msg.sigma_eul_b_r_deg.y = angles::to_degrees(std::sqrt(C(idx.eul_l_b_r + 1, idx.eul_l_b_r + 1)));
-  cov_msg.sigma_eul_b_r_deg.z = angles::to_degrees(std::sqrt(C(idx.eul_l_b_r + 2, idx.eul_l_b_r + 2)));
+  cov_msg.sigma_eul_b_r_deg.x = angles::to_degrees(std::sqrt(C(idx.eul_b_r, idx.eul_b_r)));
+  cov_msg.sigma_eul_b_r_deg.y = angles::to_degrees(std::sqrt(C(idx.eul_b_r + 1, idx.eul_b_r + 1)));
+  cov_msg.sigma_eul_b_r_deg.z = angles::to_degrees(std::sqrt(C(idx.eul_b_r + 2, idx.eul_b_r + 2)));
 
   cov_msg.sigma_l_b_r.x = std::sqrt(C(idx.l_b_r, idx.l_b_r));
   cov_msg.sigma_l_b_r.y = std::sqrt(C(idx.l_b_r + 1, idx.l_b_r + 1));
