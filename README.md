@@ -67,9 +67,11 @@ Our implementation depends on:
 - Ubuntu 16.04 and ROS Kinetic
 - [catkin_simple](https://github.com/catkin/catkin_simple.git)  
 - [catkin_tools](https://catkin-tools.readthedocs.io/en/latest/) (for convenience)
-- [rpg_trajectory_evaluation](https://github.com/uzh-rpg/rpg_trajectory_evaluation) (optional, for comprehensive evaluation)
+- [rpg_trajectory_evaluation](https://github.com/christopherdoer/rpg_trajectory_evaluation) (optional, for comprehensive evaluation)
+  - sudo apt-get install texlive-latex-extra texlive-fonts-recommended dvipng cm-super
+  - pip2 install -U PyYAML colorama ruamel.yaml==0.15.0 
 
-Build in Release is recommended:
+**Build in Release is highly recommended**:
 ~~~[shell]
 catkin build --cmake-args -DCMAKE_BUILD_TYPE=Release
 ~~~

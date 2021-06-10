@@ -99,7 +99,7 @@ roslaunch ekf_yrio icins2021_datasets_ekf-yrio_rosbag.launch dataset_dir:=<path_
 ~~~
 
 Run and evaluate all runs of the [radar_inertial_datasets_icins_2021](https://christopherdoer.github.io/datasets/icins_2021_radar_inertial_odometry) dataset 
-(depends on [rpg_trajectory_evaluation](https://github.com/uzh-rpg/rpg_trajectory_evaluation)):
+(depends on [rpg_trajectory_evaluation](https://github.com/christopherdoer/rpg_trajectory_evaluation), see Getting Started in [README](../README.md) for installation):
 
 ~~~[shell]
 rosrun ekf_yrio icins_2021_evaluation.py _rosbag_base_dir:=<path_to_radar_inertial_datasets_icins_2021>
@@ -107,7 +107,7 @@ rosrun ekf_yrio icins_2021_evaluation.py _rosbag_base_dir:=<path_to_radar_inerti
 
 This will save the evaluation at <path_to_radar_inertial_datasets_icins_2021>/results for the carried and flight datasets.
 The estimation result of ekf_rio and ekf_yrio (with and w/o barometer fusion) are aligned with the ground truth and evaluated using 
-[rpg_trajectory_evaluation](https://github.com/uzh-rpg/rpg_trajectory_evaluation). 
+[rpg_trajectory_evaluation](https://github.com/christopherdoer/rpg_trajectory_evaluation). 
 Plots and further error metrics are located at <path_to_radar_inertial_datasets_icins_2021>/results/<carried/flight>_datasets/evaluation_full_align.
 
 ## Nodes
