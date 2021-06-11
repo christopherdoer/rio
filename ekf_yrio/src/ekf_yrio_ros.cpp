@@ -332,8 +332,18 @@ void EkfYRioRos::iterate()
     else
     {
       if (queue_radar_.size() > 1)
-        ROS_ERROR_STREAM(kStreamingPrefix << "Radar data queue size > 1: " << queue_radar_.size()
-                                          << " this should not happen!");
+      {
+        if (queue_radar_.front().header.stamp == queue_radar_.back().header.stamp)
+        {
+          ROS_WARN_STREAM(kStreamingPrefix << "Got two radar scans with the same timestamp, dropping one.");
+          queue_radar_.pop();
+        }
+        else
+        {
+          ROS_ERROR_STREAM(kStreamingPrefix << "Radar data queue size > 1: " << queue_radar_.size()
+                                            << " this should not happen!");
+        }
+      }
 
       auto radar_data_msg = queue_radar_.front();
 
