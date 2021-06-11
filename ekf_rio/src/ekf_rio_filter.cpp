@@ -22,7 +22,7 @@
 
 using namespace rio;
 
-bool EkfRioFilter::init(const std::vector<ImuDataStamped>& imu_init_vec)
+bool EkfRioFilter::init(const std::vector<ImuDataStamped>& imu_init_vec, const Real& baro_h0)
 {
   x_error_ = Vector::Zero(error_idx_.base_state_length);
 
@@ -49,7 +49,7 @@ bool EkfRioFilter::init(const std::vector<ImuDataStamped>& imu_init_vec)
 
   bias_.acc  = init_struct_.b_a_0;
   bias_.gyro = init_struct_.omega_calibration ? w_mean + init_struct_.b_w_0 : init_struct_.b_w_0;
-  bias_.alt  = init_struct_.b_alt_0;
+  bias_.alt  = baro_h0;
 
   T_b_r_.translation() = init_struct_.l_b_r_0;
   T_b_r_.linear()      = Matrix3(init_struct_.q_b_r_0);

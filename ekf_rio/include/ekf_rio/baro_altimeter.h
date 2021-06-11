@@ -29,14 +29,13 @@ class BaroAltimeter
 {
 public:
   /**
-   * @brief Pressure to relative height conversion
+   * @brief Pressure to negative height conversion
    * @param pressure_msg   fluid pressure ros message containing the air pressure in Pascal
-   * @param h_0            init height in [m]
-   * @returns the relative negative height in [m]
+   * @returns the negative height in [m]
    */
-  Real calculate_rel_neg_height(const sensor_msgs::FluidPressure& pressure_msg, const Real h_0)
+  Real calculate_rel_neg_height(const sensor_msgs::FluidPressure& pressure_msg)
   {
-    return (R * T_0) / (g_0 * M) * std::log(pressure_msg.fluid_pressure / P_0) - h_0;
+    return (R * T_0) / (g_0 * M) * std::log(pressure_msg.fluid_pressure / P_0);
   }
 
 private:

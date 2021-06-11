@@ -82,12 +82,6 @@ private:
   bool initImu(const ImuDataStamped& imu_data);
 
   /**
-   * @brief Tries to initializes the barometer with the provided mueasurement
-   * @returns true init successfull
-   */
-  bool initBaro(const sensor_msgs::FluidPressure& baro);
-
-  /**
    * @brief Reconfigure callback, enables online reconfigure using rqt_reconfigure
    */
   void reconfigureCallback(ekf_rio::EkfRioConfig& config, uint32_t level);
@@ -133,7 +127,6 @@ private:
   ros::Subscriber sub_baro_;
   ros::Subscriber sub_radar_;
   ros::Subscriber sub_radar_trigger_;
-  ros::Subscriber sub_global_pose_;
 
   ros::Publisher pub_cov_;
   ros::Publisher pub_nom_;
@@ -172,7 +165,6 @@ private:
   BaroAltimeter baro_altimeter_;
   bool baro_initialized_ = false;
   std::vector<Real> baro_init_vec_;
-  Real baro_h_0_ = 0.0;
 
   RadarEgoVelocityEstimator radar_ego_velocity_;
 

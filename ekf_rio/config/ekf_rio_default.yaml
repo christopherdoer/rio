@@ -24,7 +24,6 @@ topic_ground_truth_twist_body: "/ground_truth/twist_body"
 # KF Updates
 altimeter_update: True
 sigma_altimeter: 5.0
-sigma_b_alt: 0
 
 radar_update: True
 
@@ -94,6 +93,7 @@ sigma_roll_pitch_deg: 0
 sigma_yaw_deg: 0
 sigma_b_a: 0.02
 sigma_b_w_deg: 0.000003
+sigma_b_alt: 1.0
 
 sigma_l_b_r_x: 0.01
 sigma_l_b_r_y: 0.01

@@ -46,7 +46,7 @@ public:
    * @param imu_init_vec   vector of imu measurements used for initialization
    * @returns true if init successful
    */
-  bool init(const std::vector<ImuDataStamped>& imu_init_vec);
+  bool init(const std::vector<ImuDataStamped>& imu_init_vec, const Real &baro_h0);
 
   /**
    * @brief Propagates the filter state using the provided IMU measurement
