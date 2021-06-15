@@ -23,9 +23,16 @@ RIO features the following packages:
 Checkout the README files of the individual packages for more details.
 
 ## Demos
-***Autonomous UAV Flights using Radar Inertial Odometry (ekf_rio)***
 
+### Autonomous Indoor Drone Flight using Yaw aided Radar Inertial Odometry ([ekf_yrio](./ekf_yrio))   
+[![Autonomous Indoor Drone Flights using Yaw aided Radar Inertial Odometry](http://img.youtube.com/vi/KhWPqMC6gSE/0.jpg)](http://www.youtube.com/watch?v=KhWPqMC6gSE "Autonomous Indoor Drone Flights using Yaw aided Radar Inertial Odometry")
+
+### Indoor Demo and Evaluation of Yaw aided Radar Inertial Odometry ([ekf_yrio](./ekf_yrio))   
+[![Autonomous UAV Flights using Radar Inertial Odometry](http://img.youtube.com/vi/EIcBMo1sM_g/0.jpg)](http://www.youtube.com/watch?v=EIcBMo1sM_g "Autonomous UAV Flights using Radar Inertial Odometry")
+
+### Autonomous UAV Flights using Radar Inertial Odometry ([ekf_rio](./ekf_rio))
 [![Autonomous UAV Flights using Radar Inertial Odometry](http://img.youtube.com/vi/8DofG1iXHAE/0.jpg)](http://www.youtube.com/watch?v=8DofG1iXHAE "Autonomous UAV Flights using Radar Inertial Odometry")
+
 
 ## References
 
