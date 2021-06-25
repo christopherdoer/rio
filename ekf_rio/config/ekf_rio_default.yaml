@@ -93,7 +93,7 @@ sigma_roll_pitch_deg: 0
 sigma_yaw_deg: 0
 sigma_b_a: 0.02
 sigma_b_w_deg: 0.000003
-sigma_b_alt: 1.0
+sigma_b_alt: 0.1
 
 sigma_l_b_r_x: 0.01
 sigma_l_b_r_y: 0.01

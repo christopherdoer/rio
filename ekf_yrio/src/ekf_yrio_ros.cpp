@@ -75,9 +75,20 @@ bool EkfYRioRos::initImu(const ImuDataStamped& imu_data)
   const auto T_init_so_far = (imu_init_.back().time_stamp - imu_init_.front().time_stamp).toSec();
   if (T_init_so_far > config_.T_init)
   {
-    const auto baro_h_0 = std::accumulate(baro_init_vec_.begin(), baro_init_vec_.end(), 0.0) / baro_init_vec_.size();
-    ROS_INFO_STREAM(kStreamingPrefix << "Initialized baro h_0: " << baro_h_0);
-    baro_initialized_ = true;
+    Real baro_h_0 = 0.0;
+    if (config_.altimeter_update)
+    {
+      if (baro_init_vec_.size() > 0)
+      {
+        baro_h_0 = std::accumulate(baro_init_vec_.begin(), baro_init_vec_.end(), 0.0) / baro_init_vec_.size();
+        ROS_INFO_STREAM(kStreamingPrefix << "Initialized baro h_0: " << baro_h_0);
+        baro_initialized_ = true;
+      }
+      else
+      {
+        ROS_ERROR_STREAM(kStreamingPrefix << "Unable to init baro --> no measurements received!");
+      }
+    }
 
     initialized_            = ekf_yrio_filter_.init(imu_init_, baro_h_0);
     filter_start_stamp_     = ekf_yrio_filter_.getTimestamp();
@@ -243,12 +254,13 @@ void EkfYRioRos::iterate()
 
   if (!queue_baro_.empty())
   {
-    auto baro_temp_msg = queue_baro_.front();
+    auto baro_msg = queue_baro_.front();
     if (!baro_initialized_)
     {
+      baro_init_vec_.emplace_back(baro_altimeter_.calculate_rel_neg_height(baro_msg));
       queue_baro_.pop();
     }
-    else if (ekf_yrio_filter_.getTimestamp() >= baro_temp_msg.header.stamp)
+    else if (ekf_yrio_filter_.getTimestamp() >= baro_msg.header.stamp)
     {
       queue_baro_.pop();
       if (config_.altimeter_update)
@@ -256,7 +268,7 @@ void EkfYRioRos::iterate()
         if (initialized_)
         {
           profiler_.start("baro_altimeter_update");
-          const auto h_rel = baro_altimeter_.calculate_rel_neg_height(baro_temp_msg);
+          const auto h_rel = baro_altimeter_.calculate_rel_neg_height(baro_msg);
           ekf_yrio_filter_.updateAltimeter(h_rel, config_.sigma_altimeter);
           profiler_.stop("baro_altimeter_update");
         }
