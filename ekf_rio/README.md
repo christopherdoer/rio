@@ -74,6 +74,12 @@ Run without rviz and plotting:
 roslaunch ekf_rio demo_datasets_ekf-rio_rosbag.launch do_plot:=False enable_rviz:=False
 ~~~
 
+Run without radar trigger messages:
+
+~~~[shell]
+roslaunch ekf_rio demo_datasets_ekf-rio_rosbag.launch run_without_radar_trigger:=True
+~~~
+
 Run in online mode:
 
 ~~~[shell]
@@ -97,3 +103,20 @@ Published topics are the same for both modes:
 - ~twist ([geometry_msgs/TwistStamped](http://docs.ros.org/en/api/geometry_msgs/html/msg/TwistStamped.html])): twist (ROS convention)
 - ~pose_path ([nav_msgs/Path](http://docs.ros.org/en/api/nav_msgs/html/msg/Path.html)): pose path (ROS convention)
 - ~radar_scan_inlier ([sensor_msgs/PointCloud2](http://docs.ros.org/en/api/sensor_msgs/html/msg/PointCloud2.html)): radar scan inlier used for velocity estimation
+
+
+## ti_mmwave_rospkg Support
+
+The standard format of the ti_mmwave_rospkg (version 3.3.0) is also supported.
+
+Run the demo with radar trigger signal:
+
+~~~[shell]
+roslaunch ekf_rio ti_mmwave_ekf-rio_rosbag.launch run_without_radar_trigger:=False
+~~~
+
+Run the demo without radar trigger signal:
+
+~~~[shell]
+roslaunch ekf_rio ti_mmwave_ekf-rio_rosbag.launch run_without_radar_trigger:=True
+~~~

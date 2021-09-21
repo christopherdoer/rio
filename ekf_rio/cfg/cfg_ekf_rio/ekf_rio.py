@@ -8,6 +8,7 @@ def configure(gen):
     # general
     general = gen.add_group("Filter Mode")
     general.add("frame_id", str_t, 0, "Frame of estimated pose", "odom")
+    general.add("run_without_radar_trigger", bool_t, 0, "Run ekf_rio w/o trigger message (radar scan header stamp is used only, might yield worse results)", False)
 
     # subscribers
     subscribers = gen.add_group("Subscribers")

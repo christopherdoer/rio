@@ -178,8 +178,8 @@ void RadarBodyVelocityEstimatorRos::callbackImu(const sensor_msgs::ImuConstPtr& 
 
 {
   mutex_.lock();
-  w_b_imu = Vector3(imu_msg->angular_velocity.x, imu_msg->angular_velocity.y, imu_msg->angular_velocity.z);
-
+  w_b_imu       = Vector3(imu_msg->angular_velocity.x, imu_msg->angular_velocity.y, imu_msg->angular_velocity.z);
+  stamp_w_b_imu = imu_msg->header.stamp;
   if (!gyro_offset_initialized_)
   {
     if (gyro_calib_start_ == ros::TIME_MIN)
@@ -211,7 +211,17 @@ void RadarBodyVelocityEstimatorRos::callbackRadarScan(const sensor_msgs::PointCl
     if (run_without_trigger)
     {
       // no trigger available --> use most recent omege measurement
-      processRadarData(*radar_scan_msg, w_b_imu, radar_scan_msg->header.stamp);
+
+      // catch bug of ti_mmwave driver --> time stamp is 0 :(
+      if (radar_scan_msg->header.stamp.sec == 0)
+      {
+        ROS_WARN_THROTTLE(1.0, "Time stamp of radar scan pcl is 0 using most recent IMU data as timestamp!");
+        processRadarData(*radar_scan_msg, w_b_imu, stamp_w_b_imu);
+      }
+      else
+      {
+        processRadarData(*radar_scan_msg, w_b_imu, radar_scan_msg->header.stamp);
+      }
     }
     else
     {

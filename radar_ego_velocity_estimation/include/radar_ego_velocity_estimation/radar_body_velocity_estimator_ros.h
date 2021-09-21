@@ -116,6 +116,7 @@ private:
   Vector3 offset_gyro = Vector3(0, 0, 0);
 
   Vector3 w_b_imu         = Vector3(0, 0, 0);
+  ros::Time stamp_w_b_imu = ros::TIME_MIN;
   Vector3 w_b_radar       = Vector3(0, 0, 0);
   ros::Time trigger_stamp = ros::TIME_MIN;
 };

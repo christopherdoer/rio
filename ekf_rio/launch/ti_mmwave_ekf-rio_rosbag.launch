@@ -8,12 +8,12 @@
     <arg name="enable_rviz" default="True"/>
 
     <arg name="dataset_dir" default="$(find ekf_rio)../demo_datasets/"/>
-    <arg name="rosbag" default="vicon_easy.bag"/>
+    <arg name="rosbag" default="ti_mmwave_rospkg_demo.bag"/>
 
     <arg name="config" default="ekf_rio_default"/>
-    <arg name="calibration" default="$(find ekf_rio)../demo_datasets/calib_vicon_dataset"/>
+    <arg name="calibration" default="$(find ekf_rio)../demo_datasets/calib_ti_mmwave_rospkg_dataset"/>
 
-    <arg name="run_without_radar_trigger" default="False" />
+    <arg name="run_without_radar_trigger" default="False"/>
 
     <arg name="bag_start" default="0"/>
     <arg name="bag_duration" default="-1.0"/>
@@ -28,17 +28,7 @@
         <param name="bag_start" value="$(arg bag_start)" type="double"/>
         <param name="bag_duration" value="$(arg bag_duration)" type="double"/>
         <param name="b_0_w_z_deg" value="-0.05" type="double"/>
-        <param name="republish_ground_truth" value="true" type="bool"/>
         <param name="run_without_radar_trigger" value="$(arg run_without_radar_trigger)" type="bool"/>
-
-    </node>
-
-    <node name="evaluator" pkg="ekf_rio" type="pose_velocity_evaluator.py" output="screen">
-        <rosparam file="$(arg calibration).yaml" command="load" ns=""/>
-        <param name="topic_pose" value="$(arg filter_node_name)/pose" type="string"/>
-        <param name="topic_twist" value="$(arg filter_node_name)/twist" type="string"/>
-        <param name="filter_name" value="ekf_rio" type="string"/>
-        <param name="do_plot" value="$(arg do_plot)" type="bool"/>
     </node>
 
     <node pkg="rosservice" type="rosservice" name="set_$(arg filter_node_name)_log_level"

@@ -49,47 +49,61 @@ class VelocityEstimationEvaluator:
 
     def analyze(self):
         v_body_raw = np.vstack(self.list_v_b)
-        v_body_gt_raw = np.vstack(self.list_v_gt)
 
-        min_t = max([v_body_raw[0, 0], v_body_gt_raw[0, 0]])
+        if len(self.list_v_gt) == 0:
+            fig_v, (ax_comp) = plt.subplots(3, 1, sharex=True, sharey=True, figsize=(10, 8))
+            fig_v.suptitle('Radar Body Velocity Estimation', fontsize="large")
 
-        v_body = v_body_raw[v_body_raw[:, 0] > min_t, :]
-        v_body_gt = v_body_gt_raw[v_body_gt_raw[:, 0] > min_t, :]
+            xyz = "xyz"
+            for k in range(3):
+                ax_comp[k].plot(v_body_raw[:, 0], v_body_raw[:, k + 1], label="radar")
+                ax_comp[k].grid(True)
+                ax_comp[k].set_ylabel("v_b_" + xyz[k] + " [m/s]")
 
-        v_body_gt_inter = np.zeros((v_body.shape[0], 3))
-        for k in range(3):
-            v_body_gt_inter[:, k] = np.interp(v_body[:, 0], v_body_gt[:, 0], v_body_gt[:, k + 1])
+            ax_comp[2].legend(loc='upper right', fontsize="medium")
+            ax_comp[2].set_xlabel("ros timestamp [s]")
+        else:
+            v_body_gt_raw = np.vstack(self.list_v_gt)
 
-        err_v = v_body[:, 1:4] - v_body_gt_inter
+            min_t = max([v_body_raw[0, 0], v_body_gt_raw[0, 0]])
 
-        # err_v[np.linalg.norm(err_v, axis=1) > 1, :] = 0
+            v_body = v_body_raw[v_body_raw[:, 0] > min_t, :]
+            v_body_gt = v_body_gt_raw[v_body_gt_raw[:, 0] > min_t, :]
 
-        self.print_stats(err_v)
+            v_body_gt_inter = np.zeros((v_body.shape[0], 3))
+            for k in range(3):
+                v_body_gt_inter[:, k] = np.interp(v_body[:, 0], v_body_gt[:, 0], v_body_gt[:, k + 1])
 
-        fig_v, (ax_comp) = plt.subplots(3, 1, sharex=True, sharey=True, figsize=(10, 8))
-        fig_v.suptitle('Radar Body Velocity Estimation Comparison', fontsize="large")
+            err_v = v_body[:, 1:4] - v_body_gt_inter
 
-        fig_err, (ax_v_err) = plt.subplots(3, 1, sharex=True, sharey=True, figsize=(10, 8))
-        fig_err.suptitle('Radar Body Velocity Estimation Error with Estimated Sigmas', fontsize="large")
+            # err_v[np.linalg.norm(err_v, axis=1) > 1, :] = 0
 
-        xyz = "xyz"
-        for k in range(3):
-            ax_comp[k].plot(v_body_raw[:, 0], v_body_raw[:, k + 1], label="radar")
-            ax_comp[k].plot(v_body_gt_raw[:, 0], v_body_gt_raw[:, k + 1], label="groundtruth")
-            ax_comp[k].grid(True)
-            ax_comp[k].set_ylabel("v_b_" + xyz[k] + " [m/s]")
+            self.print_stats(err_v)
 
-            ax_v_err[k].plot(v_body[:, 0], err_v[:, k], 'k', label="velocity error")
-            ax_v_err[k].plot(v_body[:, 0], 3 * v_body[:, k + 4], 'r-', linewidth=3, label="est. +-3 sigma")
-            ax_v_err[k].plot(v_body[:, 0], -3 * v_body[:, k + 4], 'r-', linewidth=3)
-            ax_v_err[k].grid(True)
-            ax_v_err[k].set_ylabel("err v_b_" + xyz[k] + " [m/s]")
+            fig_v, (ax_comp) = plt.subplots(3, 1, sharex=True, sharey=True, figsize=(10, 8))
+            fig_v.suptitle('Radar Body Velocity Estimation Comparison', fontsize="large")
 
-        ax_comp[2].legend(loc='upper right', fontsize="medium")
-        ax_comp[2].set_xlabel("ros timestamp [s]")
+            fig_err, (ax_v_err) = plt.subplots(3, 1, sharex=True, sharey=True, figsize=(10, 8))
+            fig_err.suptitle('Radar Body Velocity Estimation Error with Estimated Sigmas', fontsize="large")
 
-        ax_v_err[0].legend(loc='upper right', fontsize="medium")
-        ax_v_err[2].set_xlabel("ros timestamp [s]")
+            xyz = "xyz"
+            for k in range(3):
+                ax_comp[k].plot(v_body_raw[:, 0], v_body_raw[:, k + 1], label="radar")
+                ax_comp[k].plot(v_body_gt_raw[:, 0], v_body_gt_raw[:, k + 1], label="groundtruth")
+                ax_comp[k].grid(True)
+                ax_comp[k].set_ylabel("v_b_" + xyz[k] + " [m/s]")
+
+                ax_v_err[k].plot(v_body[:, 0], err_v[:, k], 'k', label="velocity error")
+                ax_v_err[k].plot(v_body[:, 0], 3 * v_body[:, k + 4], 'r-', linewidth=3, label="est. +-3 sigma")
+                ax_v_err[k].plot(v_body[:, 0], -3 * v_body[:, k + 4], 'r-', linewidth=3)
+                ax_v_err[k].grid(True)
+                ax_v_err[k].set_ylabel("err v_b_" + xyz[k] + " [m/s]")
+
+            ax_comp[2].legend(loc='upper right', fontsize="medium")
+            ax_comp[2].set_xlabel("ros timestamp [s]")
+
+            ax_v_err[0].legend(loc='upper right', fontsize="medium")
+            ax_v_err[2].set_xlabel("ros timestamp [s]")
 
     def print_stats(self, err):
         err_mean = err.mean(axis=0)
@@ -118,7 +132,6 @@ if __name__ == "__main__":
             if evaluator.last_sub_walltime is not None and time.time() - evaluator.last_sub_walltime > 0.5:
                 break
             rospy.rostime.wallsleep(0.5)
-
         evaluator.analyze()
         while not rospy.core.is_shutdown():
             plt.pause(0.1)

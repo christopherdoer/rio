@@ -1,4 +1,4 @@
-# Demo Datasets
+# Demo Datasets RIO Format
 
 The demo datasets have been recorded with a sensor setup consisting of an Analog Devices ADIS16448 IMU and a TI
  IWR6843AOPEVM. The IMU rate is ca. 410 Hz and the radar rate is 10Hz. The radar measurements are hardware triggered to synchronize the measurements with the IMU data.
@@ -35,6 +35,10 @@ struct RadarPointCloudType
                                   
 pcl::PointCloud<RadarPointCloudType> your_pcl;
 ~~~
+
+# Demo Dataset ti_mmwave_rospkg Format
+The [ti_mmwave_rospkg_demo.bag](ti_mmwave_rospkg_demo.bag) demo dataset has been recorded with the ti_mmwave_rospkg (version 3.3.0) driver.
+It also features trigger messages, the calibration is provided [here](calib_ti_mmwave_rospkg_dataset.yaml).
 
 
 

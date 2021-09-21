@@ -276,7 +276,7 @@ void EkfRioRos::iterate()
 
   if (!queue_radar_trigger_.empty())
   {
-    if (!initialized_ || !config_.radar_update)
+    if (!initialized_ || !config_.radar_update || config_.run_without_radar_trigger)
     {
       queue_radar_trigger_.pop();
     }
@@ -322,7 +322,17 @@ void EkfRioRos::iterate()
   if (!queue_radar_.empty())
   {
     if (radar_frame_id_.empty())
-      radar_frame_id_ = queue_radar_.front().header.frame_id;
+    {
+      if (queue_radar_.front().header.frame_id.empty())
+      {
+        ROS_WARN_STREAM(kStreamingPrefix << "Empty radar pcl frame id! Using default <radar>");
+        radar_frame_id_ = "radar";
+      }
+      else
+      {
+        radar_frame_id_ = queue_radar_.front().header.frame_id;
+      }
+    }
 
     if (!initialized_ || !config_.radar_update)
     {
@@ -346,6 +356,16 @@ void EkfRioRos::iterate()
 
       auto radar_data_msg = queue_radar_.front();
 
+      // TODO check for future
+      // ti_mmwave_rospkg point clouds have the timestamp 0/0 :( --> workaround: use most recent imu as time
+      if (config_.run_without_radar_trigger || radar_data_msg.header.stamp.toNSec() == 0)
+        radar_data_msg.header.stamp = ekf_rio_filter_.getTimestamp();
+
+      // TODO check for future
+      // ti_mmwave_rospkg pcls have an empty frame id :(
+      if (radar_data_msg.header.frame_id.empty())
+        radar_data_msg.header.frame_id = "radar";
+
       if (ekf_rio_filter_.getTimestamp().toSec() + config_.radar_frame_ms / 1.0e3 >=
           radar_data_msg.header.stamp.toSec())
       {
@@ -356,6 +376,13 @@ void EkfRioRos::iterate()
         }
         else
         {
+          // workaround for scan only (no trigger) mode --> augment state now
+          // TODO stochastic cloning no needed here ;) (this way, however, the already implemented updates can be used)
+          if (config_.run_without_radar_trigger)
+          {
+            ekf_rio_filter_.addRadarStateClone(radar_data_msg.header.stamp);
+          }
+
           const auto time_diff_clone =
               ekf_rio_filter_.getRadarCloneState().trigger_time_stamp.toSec() - radar_data_msg.header.stamp.toSec();
           if (std::fabs(time_diff_clone) < 1.0 / config_.radar_rate)
@@ -363,8 +390,15 @@ void EkfRioRos::iterate()
             queue_radar_.pop();
 
             Vector3 w_mean(0, 0, 0);
-            for (const auto& imu : radar_w_queue_) w_mean += imu.w_b_ib;
-            w_mean /= radar_w_queue_.size();
+            if (radar_w_queue_.size() > 0)
+            {
+              for (const auto& imu : radar_w_queue_) w_mean += imu.w_b_ib;
+              w_mean /= radar_w_queue_.size();
+            }
+            else
+            {
+              w_mean = imu_data_.w_b_ib;
+            }
 
             Vector3 v_r, sigma_v_r;
             profiler_.start("estimate_radar_velocity");

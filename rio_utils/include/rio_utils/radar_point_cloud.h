@@ -33,8 +33,25 @@ struct RadarPointCloudType
   float noise_db;       // CFAR noise level of the side of the detected cell in [dB]
   float range;          // range in [m]
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-} EIGEN_ALIGN16;
+};
+
+struct mmWaveCloudType
+{
+  PCL_ADD_POINT4D;
+  union
+  {
+    struct
+    {
+      float intensity;
+      float velocity;
+    };
+    float data_c[4];
+  };
+  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+};
 
 bool pcl2msgToPcl(const sensor_msgs::PointCloud2& pcl_msg, pcl::PointCloud<RadarPointCloudType>& scan);
+
+bool pclToPcl2msg(pcl::PointCloud<RadarPointCloudType> scan, sensor_msgs::PointCloud2& pcl_msg);
 
 }  // namespace rio
