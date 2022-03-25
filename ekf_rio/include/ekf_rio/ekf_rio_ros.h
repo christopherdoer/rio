@@ -32,7 +32,7 @@
 #include <rio_utils/data_types.h>
 #include <rio_utils/simple_profiler.h>
 
-#include <radar_ego_velocity_estimation/radar_ego_velocity_estimator.h>
+#include <radar_ego_velocity_estimator/radar_ego_velocity_estimator.h>
 
 #include <ekf_rio/baro_altimeter.h>
 #include <ekf_rio/ekf_rio_filter.h>
@@ -166,7 +166,7 @@ private:
   bool baro_initialized_ = false;
   std::vector<Real> baro_init_vec_;
 
-  RadarEgoVelocityEstimator radar_ego_velocity_;
+  reve::RadarEgoVelocityEstimator radar_ego_velocity_;
 
   ros::Time last_timestamp_pub_      = ros::Time(0.0);
   ros::Time last_timestamp_pose_pub_ = ros::Time(0.0);

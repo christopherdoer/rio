@@ -9,7 +9,6 @@ add_compile_options(-std=c++11)
 cs_add_library(${PROJECT_NAME}
   src/strapdown.cpp
   src/simple_profiler.cpp
-  src/radar_point_cloud.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}

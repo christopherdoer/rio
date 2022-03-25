@@ -126,5 +126,17 @@ static bool convolve(const Vector v, const Vector k, const ConvolveType type, Ve
   return false;
 }
 
+/**
+ * @brief Returns the corrected quaternion based on the given euler error and quaternion (Hamilton convention!)
+ * @param err_euler   Euler error angle
+ * @param q           Quaterion to be corrected
+ * @returns the corrected quaternion
+ */
+static Quaternion getCorrectedQuaternion(const Vector3& err_euler, const Quaternion& q)
+{
+  return math_helper::quaternionMultiplicationHamilton(
+      Quaternion(1, -0.5 * err_euler.x(), -0.5 * err_euler.y(), -0.5 * err_euler.z()), q);
+}
+
 }  // namespace math_helper
 }  // namespace rio

@@ -29,7 +29,7 @@
   <depend>tf2_eigen</depend>
 
   <depend>rio_utils</depend>
-  <depend>radar_ego_velocity_estimation</depend>
+  <depend>radar_ego_velocity_estimator</depend>
 
   <export>
   </export>

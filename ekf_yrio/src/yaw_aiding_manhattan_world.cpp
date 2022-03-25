@@ -15,7 +15,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <ekf_yrio/yaw_aiding_manhattan_world.h>
-#include <rio_utils/radar_point_cloud.h>
+#include <radar_ego_velocity_estimator/radar_point_cloud.h>
 
 #include <boost/math/distributions/chi_squared.hpp>
 
@@ -56,8 +56,7 @@ bool YawAidingManhattanWorld::update(const sensor_msgs::PointCloud2& radar_scan_
         Real azi_stab, ele_stab, r_stab;
         math_helper::cartesianToSpherical(best_fit.second.p_stab, r_stab, azi_stab, ele_stab);
         const Real yaw_m_shifted = math_helper::wrapToPositive(-azi_stab + gamma_manhattan_, 2 * M_PI);
-        const Real yaw_filter =
-            math_helper::wrapToPositive(radar_filter_state.nav_sol.getEuler_n_b().yaw(), 2 * M_PI);
+        const Real yaw_filter = math_helper::wrapToPositive(radar_filter_state.nav_sol.getEuler_n_b().yaw(), 2 * M_PI);
 
         const int k               = static_cast<int>(std::round((yaw_filter - yaw_m_shifted) / (M_PI / 2)));
         const Real yaw_m_positive = math_helper::wrapToPositive(yaw_m_shifted + k * M_PI / 2, 2 * M_PI);
@@ -85,7 +84,8 @@ bool YawAidingManhattanWorld::update(const sensor_msgs::PointCloud2& radar_scan_
   return false;
 }
 
-bool YawAidingManhattanWorld::init(const sensor_msgs::PointCloud2& radar_scan_msg, const RadarCloneState& radar_filter_state)
+bool YawAidingManhattanWorld::init(const sensor_msgs::PointCloud2& radar_scan_msg,
+                                   const RadarCloneState& radar_filter_state)
 {
   RadarDetections detections_filtered;
   if (getFilteredDetections(radar_scan_msg, radar_filter_state, detections_filtered))
@@ -184,9 +184,9 @@ bool YawAidingManhattanWorld::getFilteredDetections(const sensor_msgs::PointClou
                                                     const RadarCloneState& radar_state,
                                                     RadarDetections& detections_filtered)
 {
-  auto radar_scan(new pcl::PointCloud<RadarPointCloudType>);
+  auto radar_scan(new pcl::PointCloud<reve::RadarPointCloudType>);
 
-  if (pcl2msgToPcl(radar_scan_msg, *radar_scan))
+  if (reve::pcl2msgToPcl(radar_scan_msg, *radar_scan))
   {
     if (radar_state.nav_sol.v_n_b.head(2).norm() > config_.yaw_aiding_min_v_xy)
     {

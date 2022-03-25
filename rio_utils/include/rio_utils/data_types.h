@@ -73,6 +73,8 @@ struct EulerAngles : public Vector3
 
 struct NavigationSolution
 {
+  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+
   NavigationSolution()
   {
     pose_n_b.linear().setIdentity();
@@ -114,6 +116,8 @@ struct NavigationSolution
 
   Matrix3 getC_n_b() const { return pose_n_b.linear(); }
 
+  Isometry getPose() const { return pose_n_b; }
+
   Isometry getPoseRos() const
   {
     tf2::Quaternion q_n_b;
@@ -125,8 +129,6 @@ struct NavigationSolution
 
   Isometry pose_n_b;  // position and attitude in navigation frame
   Vector3 v_n_b;      // [m/s]
-
-  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 };
 
 struct ImuData

@@ -19,7 +19,7 @@
 #include <Eigen/StdVector>
 
 #include <rio_utils/data_types.h>
-#include <rio_utils/radar_point_cloud.h>
+#include <radar_ego_velocity_estimator/radar_point_cloud.h>
 
 #include <ekf_rio/data_types.h>
 
@@ -74,11 +74,11 @@ struct RadarDetections
 {
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
-  RadarDetections(const pcl::PointCloud<RadarPointCloudType>& scan, const RadarCloneState& radar_clone_state)
+  RadarDetections(const pcl::PointCloud<reve::RadarPointCloudType>& scan, const RadarCloneState& radar_clone_state)
   {
     for (uint k = 0; k < scan.size(); ++k)
     {
-      RadarPointCloudType p = scan.at(k);
+      reve::RadarPointCloudType p = scan.at(k);
       detections.emplace_back(RadarDetection(p.x, p.y, p.z, p.snr_db, radar_clone_state));
     }
     nav_sol = radar_clone_state.nav_sol;
