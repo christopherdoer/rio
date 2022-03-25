@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<!--This file is part of RIO - Radar Inertial Odometry and Radar based ego velocity estimation.-->
+<!--@author Christopher Doer <christopher.doer@kit.edu>-->
+
+<launch>
+    <arg name="type" default="rosbag_node"/>
+
+    <arg name="dataset_dir" default="$(find x_rio)../demo_datasets/x_rio/"/>
+    <arg name="rosbag" default="sim.bag"/>
+
+    <arg name="config" default="x_rio_sim"/>
+    <arg name="calibration" default="$(arg dataset_dir)/sim_circular_calib"/>
+
+    <arg name="n_radar"/>
+    <arg name="use_reduced_radar_clone" default="False"/>
+
+    <arg name="filter_node_name" default="rio"/>
+
+    <arg name="sim_sigma_v_r_x" default="0.05"/>
+    <arg name="sim_sigma_v_r_y" default="0.075"/>
+    <arg name="sim_sigma_v_r_z" default="0.12"/>
+
+    <arg name="generate_imu_noise" default="True"/>
+    <arg name="generate_radar_noise" default="True"/>
+
+    <arg name="l_b_r_x_0" default="0.05"/>
+    <arg name="l_b_r_y_0" default="-0.08"/>
+    <arg name="l_b_r_z_0" default="0.04"/>
+    <arg name="q_b_r_w_0" default="0.03449821"/>
+    <arg name="q_b_r_x_0" default="-0.29882475"/>
+    <arg name="q_b_r_y_0" default="-0.9502803"/>
+    <arg name="q_b_r_z_0" default="0.08050461"/>
+
+    <arg name="l_b_r_x_1" default="0.01"/>
+    <arg name="l_b_r_y_1" default="0.11"/>
+    <arg name="l_b_r_z_1" default="0.07"/>
+    <arg name="q_b_r_w_1" default="0.0779020311"/>
+    <arg name="q_b_r_x_1" default="-0.927120555"/>
+    <arg name="q_b_r_y_1" default="-0.36438503"/>
+    <arg name="q_b_r_z_1" default="0.040029911"/>
+
+    <arg name="l_b_r_x_2" default="-0.07"/>
+    <arg name="l_b_r_y_2" default=" 0.03"/>
+    <arg name="l_b_r_z_2" default="-0.05"/>
+    <arg name="q_b_r_w_2" default="-3.80646132e-04"/>
+    <arg name="q_b_r_x_2" default="-9.99010181e-01"/>
+    <arg name="q_b_r_y_2" default="4.36177265e-02"/>
+    <arg name="q_b_r_z_2" default="-8.71822977e-03"/>
+
+    <arg name="b_0_a_x" default="0.0"/>
+    <arg name="b_0_a_y" default="0.0"/>
+    <arg name="b_0_a_z" default="0.0"/>
+
+    <node name="$(arg filter_node_name)" pkg="x_rio" type="$(arg type)" output="screen" launch-prefix="bash -c 'sleep 0.5; $0 $@' " clear_params="false">
+        <param name="rosbag_path" value="$(arg dataset_dir)/$(arg rosbag)" type="string"/>
+
+        <rosparam file="$(find x_rio)/config/$(arg config).yaml" command="load" ns=""/>
+        <rosparam file="$(arg calibration).yaml" command="load" ns=""/>
+
+        <param name="sim_mode" value="True" type="bool"/>
+
+        <param name="generate_imu_noise" value="$(arg generate_imu_noise)" type="bool"/>
+        <param name="generate_radar_noise" value="$(arg generate_radar_noise)" type="bool"/>
+
+        <param name="n_radar" value="$(arg n_radar)" type="int"/>
+        <param name="use_reduced_radar_clone" value="$(arg use_reduced_radar_clone)" type="bool"/>
+
+        <param name="sim_sigma_v_r_x" value="$(arg sim_sigma_v_r_x)" type="double"/>
+        <param name="sim_sigma_v_r_y" value="$(arg sim_sigma_v_r_y)" type="double"/>
+        <param name="sim_sigma_v_r_z" value="$(arg sim_sigma_v_r_z)" type="double"/>
+
+        <param name="radar_0/l_b_r_x" value="$(arg l_b_r_x_0)" type="double"/>
+        <param name="radar_0/l_b_r_y" value="$(arg l_b_r_y_0)" type="double"/>
+        <param name="radar_0/l_b_r_z" value="$(arg l_b_r_z_0)" type="double"/>
+        <param name="radar_0/q_b_r_w" value="$(arg q_b_r_w_0)" type="double"/>
+        <param name="radar_0/q_b_r_x" value="$(arg q_b_r_x_0)" type="double"/>
+        <param name="radar_0/q_b_r_y" value="$(arg q_b_r_y_0)" type="double"/>
+        <param name="radar_0/q_b_r_z" value="$(arg q_b_r_z_0)" type="double"/>
+
+        <param name="radar_1/l_b_r_x" value="$(arg l_b_r_x_1)" type="double"/>
+        <param name="radar_1/l_b_r_y" value="$(arg l_b_r_y_1)" type="double"/>
+        <param name="radar_1/l_b_r_z" value="$(arg l_b_r_z_1)" type="double"/>
+        <param name="radar_1/q_b_r_w" value="$(arg q_b_r_w_1)" type="double"/>
+        <param name="radar_1/q_b_r_x" value="$(arg q_b_r_x_1)" type="double"/>
+        <param name="radar_1/q_b_r_y" value="$(arg q_b_r_y_1)" type="double"/>
+        <param name="radar_1/q_b_r_z" value="$(arg q_b_r_z_1)" type="double"/>
+
+        <param name="radar_2/l_b_r_x" value="$(arg l_b_r_x_2)" type="double"/>
+        <param name="radar_2/l_b_r_y" value="$(arg l_b_r_y_2)" type="double"/>
+        <param name="radar_2/l_b_r_z" value="$(arg l_b_r_z_2)" type="double"/>
+        <param name="radar_2/q_b_r_w" value="$(arg q_b_r_w_2)" type="double"/>
+        <param name="radar_2/q_b_r_x" value="$(arg q_b_r_x_2)" type="double"/>
+        <param name="radar_2/q_b_r_y" value="$(arg q_b_r_y_2)" type="double"/>
+        <param name="radar_2/q_b_r_z" value="$(arg q_b_r_z_2)" type="double"/>
+
+        <param name="b_0_a_x" value="$(arg b_0_a_x)" type="double"/>
+        <param name="b_0_a_y" value="$(arg b_0_a_y)" type="double"/>
+        <param name="b_0_a_z" value="$(arg b_0_a_z)" type="double"/>
+
+    </node>
+
+</launch>

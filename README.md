@@ -1,14 +1,16 @@
 # RIO - Radar Inertial Odometry and Radar based Ego Velocity Estimation
 Navigation in GNSS denied and visually degraded environments is still very challenging. 
 Approaches based on visual sensors tend to fail in conditions such as darkness, direct sunlight, fog or smoke.
-Therefore, we are using mmWave FMCW radar and inertial sensor data as these are not affected by such conditions.
+Therefore, we are using 4D mmWave FMCW radar sensors and inertial sensor data as these are not affected by such conditions.
 
 ***Highlights:***
 - Robust and accurate navigation even in Degraded Visual and GNSS denied Environments
-- Super fast: run-times ~90x faster than realtime on an Intel NUC i7 and ~10x on an Intel UpCore embedded computer
+- Super fast: [x_rio](./x_rio) achieves runtimes ~125x faster than realtime on an [Intel NUC i7](https://www.intel.com/content/www/us/en/products/sku/130392/intel-nuc-kit-nuc7i7dnke/specifications.html) and ~21x on an [Up Core](https://up-shop.org/up-core-series.html) embedded computer
 - Demonstrated for online navigation of drones even in confined indoor environments
 
 ## News
+- 03/2022: [x_rio](./x_rio) is released generalizing  [ekf_rio](./ekf_rio) and [ekf_yrio](./ekf_yrio) for multi radar sensor setups and providing a faster implementation using approximated radar clones as described in our [paper](https://christopherdoer.github.io/publication/2022_02_JGN2022). 
+  The [paper datasets](https://christopherdoer.github.io/datasets/multi_radar_inertial_datasets_JGN2022) are also released and can be evaluated with a single [script](./x_rio/python/evaluate_jgn2022_datasets.py).
 - 06/2021: The radar inertial datasets with pseudo ground truth used in our [Yaw aided Radar Inertial Odometry](https://christopherdoer.github.io/publication/2021_05_ICINS2021) paper are released: [radar_inertial_datasets_icins_2021](https://christopherdoer.github.io/datasets/icins_2021_radar_inertial_odometry). 
   Both ekf_rio and ekf_yrio can be evaluated on the whole dataset with a single [script](ekf_yrio/python/icins_2021_evaluation.py).
 - 05/2021: Initial release of RIO - Radar Inertial Odometry and Radar based ego velocity estimation.
@@ -16,9 +18,9 @@ Therefore, we are using mmWave FMCW radar and inertial sensor data as these are 
 ## Introduction
 RIO is a toolbox for EKF-based Radar Inertial Odometry and Radar based ego velocity estimation.
 RIO features the following packages:
-- [radar_ego_velocity_estimation](radar_ego_velocity_estimation): Instantaneous 3D ego velocity estimation based on a single radar scan
-- [ekf_rio](ekf_rio): An EKF-based Radar Inertial Odometry Pipeline with online calibration of the radar sensor extrinsics
-- [ekf_yrio](ekf_yrio): An extension of ekf_rio featuring yaw aiding based on Manhattan world assumptions 
+- [x_rio](./x_rio): An EKF-based Multi-Radar Inertial Odometry Pipeline with online calibration of the radar sensor extrinsics and yaw aiding using Manhattan world assumptions
+- [ekf_rio](./ekf_rio): An EKF-based Radar Inertial Odometry Pipeline with online calibration of the radar sensor extrinsics
+- [ekf_yrio](./ekf_yrio): An extension of ekf_rio featuring yaw aiding based on Manhattan world assumptions 
 
 Checkout the README files of the individual packages for more details.
 
@@ -38,6 +40,19 @@ Checkout the README files of the individual packages for more details.
 
 If you use our implementation for your academic research, please cite the related paper:
 
+***x_rio:***
+~~~[bibtex]
+@INPROCEEDINGS{DoerJGN2022,
+    author = {Doer, Christopher and Trommer, Gert F.},
+    year = {2022},
+    month = {02},
+    pages = {329-339},
+    title = {x-RIO: Radar Inertial Odometry with Multiple Radar Sensors and Yaw Aiding},
+    volume = {12},
+    journal = {Gyroscopy and Navigation},
+}
+~~~
+
 ***ekf_yrio:***
 ~~~[bibtex]
 @INPROCEEDINGS{DoerICINS2021,
@@ -48,7 +63,7 @@ If you use our implementation for your academic research, please cite the relate
   pages={1-10}
 ~~~
 
-***ekf_rio and radar_ego_velocity_estimation:***
+***ekf_rio:***
 ~~~[bibtex]
 @INPROCEEDINGS{DoerENC2020,
   author={Doer, Christopher and Trommer, Gert F.},
@@ -72,11 +87,14 @@ If you use our implementation for your academic research, please cite the relate
 ## Getting Started
 Our implementation depends on:
 - Ubuntu 16.04 and ROS Kinetic
-- [catkin_simple](https://github.com/catkin/catkin_simple.git)  
+- [catkin_simple](https://github.com/catkin/catkin_simple.git)
 - [catkin_tools](https://catkin-tools.readthedocs.io/en/latest/) (for convenience)
-- [rpg_trajectory_evaluation](https://github.com/christopherdoer/rpg_trajectory_evaluation) (optional, for comprehensive evaluation)
-  - sudo apt-get install texlive-latex-extra texlive-fonts-recommended dvipng cm-super
-  - pip2 install -U PyYAML colorama ruamel.yaml==0.15.0 
+- Pull dependencies via submodules, run once: ` git submodule update --init --recursive `. This will setup the following two submodules: 
+  - [reve](https://github.com/christopherdoer/reve)
+  - [rpg_trajectory_evaluation](https://github.com/christopherdoer/rpg_trajectory_evaluation) (optional, for comprehensive evaluation)
+    To use the evaluation scripts, the following dependecies are required:
+    - sudo apt-get install texlive-latex-extra texlive-fonts-recommended dvipng cm-super
+    - pip2 install -U PyYAML colorama ruamel.yaml==0.15.0
 
 **Build in Release is highly recommended**:
 ~~~[shell]

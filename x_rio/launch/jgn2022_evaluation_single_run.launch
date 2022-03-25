@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--This file is part of RIO - Radar Inertial Odometry and Radar based ego velocity estimation.-->
+<!--@author Christopher Doer <christopher.doer@kit.edu>-->
+
+<launch>
+    <arg name="ID"/>
+    <arg name="dataset_dir"/>
+    <arg name="rosbag"/>
+    <arg name="ground_truth_csv"/>
+    <arg name="export_directory"/>
+    <arg name="pkg"/>
+    <arg name="dataset_type"/>
+    <arg name="n_radar"/>
+    <arg name="radar_yaw_update"/>
+    <arg name="altimeter_update"/>
+    <arg name="config"/>
+
+    <param name="use_sim_time" value="False" type="bool"/>
+    <arg name="calibration" default="$(arg dataset_dir)/calib"/>
+    <arg name="bag_start" default="0"/>
+    <arg name="bag_duration" default="-1.0"/>
+    <arg name="calibration_0" default="left"/>
+    <arg name="calibration_1" default="right"/>
+    <arg name="calibration_2" default="center"/>
+    <arg name="b_0_w_z_deg" default="-0.1"/>
+    <arg name="filter_node_name" default="rio_$(arg ID)"/>
+
+    <node name="$(arg filter_node_name)" pkg="x_rio" type="rosbag_node" output="screen" launch-prefix="bash -c 'sleep 1; $0 $@' " clear_params="true">
+        <param name="rosbag_path" value="$(arg dataset_dir)/$(arg rosbag)" type="string"/>
+
+        <rosparam file="$(find x_rio)/config/$(arg config).yaml" command="load" ns=""/>
+        <rosparam file="$(arg dataset_dir)/calib_$(arg calibration_0).yaml" command="load" ns="radar_0"/>
+        <rosparam file="$(arg dataset_dir)/calib_$(arg calibration_1).yaml" command="load" ns="radar_1"/>
+        <rosparam file="$(arg dataset_dir)/calib_$(arg calibration_2).yaml" command="load" ns="radar_2"/>
+
+        <param name="b_0_w_z_deg" value="$(arg b_0_w_z_deg)" type="double"/>
+        <param name="bag_start" value="$(arg bag_start)" type="double"/>
+        <param name="bag_duration" value="$(arg bag_duration)" type="double"/>
+
+        <param name="radar_yaw_update" value="$(arg radar_yaw_update)" type="bool"/>
+        <param name="altimeter_update" value="$(arg altimeter_update)" type="bool"/>
+
+        <param name="topic_imu" value="/sensor_platform/imu" type="str"/>
+        <param name="topic_baro_altimeter" value="/sensor_platform/baro" type="str"/>
+
+        <param name="n_radar" value="$(arg n_radar)" type="int"/>
+    </node>
+
+    <node pkg="x_rio" type="evaluate_ground_truth.py" name="evaluate_ground_truth_$(arg ID)" output="screen" clear_params="true" required="True">
+        <param name="rosbag_name" type="str" value="$(arg rosbag)"/>
+        <param name="rosbag_dir" type="str" value="$(arg dataset_dir)"/>
+        <param name="ground_truth_csv" type="str" value="$(arg ground_truth_csv)"/>
+        <param name="pose_topic" type="str" value="$(arg filter_node_name)/pose"/>
+        <param name="export_directory" type="str" value="$(arg export_directory)"/>
+        <param name="dataset_type" type="str" value="$(arg dataset_type)"/>
+    </node>
+
+</launch>
