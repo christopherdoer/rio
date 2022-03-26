@@ -2,7 +2,7 @@
 
 This package generalizes [ekf_rio](../ekf_rio) and [ekf_yrio](../ekf_yrio) for multi radar sensor setups and provides a faster implementation using approximated radar clones.
 We used an instantaneous approach which can provide yaw aiding without scan matching.
-An evaluation with the [Multi Radar Inertial Datasets JGN 2022](https://christopherdoer.github.io/datasets/multi_radar_inertial_datasets_JGN2022) shows that x_rio achieves even better accuracies than the state of the art VIO framework [VINS (no loop closures)](https://github.com/HKUST-Aerial-Robotics/VINS-Fusion).
+An evaluation with the [Multi Radar Inertial Datasets JGN 2022](https://christopherdoer.github.io/datasets/multi_radar_inertial_datasets_JGN2022) shows that x_rio achieves even better accuracies than the state of the art VIO framework [Stereo VINS (no loop closures)](https://github.com/HKUST-Aerial-Robotics/VINS-Fusion).
 We highly outperform VINS regarding runtime as x_rio with a single radar sensor runs >125x and even with two radar sensors almost 90x faster than VINS!
 
 Check out our paper for more details [x-RIO: Radar Inertial Odometry with Multiple Radar Sensors and Yaw Aiding](https://christopherdoer.github.io/publication/2022_02_JGN2022).
@@ -18,9 +18,17 @@ If you use x_rio or the provided datasets for your academic research, please cit
     pages = {329-339},
     title = {x-RIO: Radar Inertial Odometry with Multiple Radar Sensors and Yaw Aiding},
     volume = {12},
-    journal = {Gyroscopy and Navigation},
-}
+    journal = {Gyroscopy and Navigation}}
 ~~~
+
+
+## Demo Result: office floor
+The image below compares x_rio (blue) against groundtruth (red) on the office_floor datasets which is part of the [Multi Radar Inertial Datasets JGN 2022](https://christopherdoer.github.io/datasets/multi_radar_inertial_datasets_JGN2022).
+This trajectory covers 425m including two loops of the approximate same path.
+The final position error is just 0.25m which corresponds to 0.1% of the trajectory length.
+
+![image](res/demo_result_office_floor.jpg)
+
 
 ## Results on  [Multi Radar Inertial Datasets JGN 2022](https://christopherdoer.github.io/datasets/multi_radar_inertial_datasets_JGN2022)
 Results comparing vins and x_rio regarding different radar sensor setups.
@@ -45,15 +53,6 @@ x_rio_baro_yaw_right |0.20|0.26|0.24|0.31|0.25
 x_rio_baro_yaw_center |0.34|0.39|0.50|0.40|0.41
 x_rio_baro_yaw_left_right |0.18|0.18|0.37|0.18|0.23
 x_rio_baro_yaw_left_center_right |0.13|0.22|0.40|0.19|0.24
-
-
-## Demo Result: office floor
-The image below compares x_rio (blue) against groundtruth (red) on the office_floor datasets which is part of the [TODO](TODO).
-This trajectory covers 425m including two loops of the approximate same path.
-The final position error is just 0.25m which corresponds to 0.1% of the trajectory length.
-
-![image](res/demo_result_office_floor.jpg)
-
 
 ## Getting Started
 

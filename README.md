@@ -16,11 +16,11 @@ Therefore, we are using 4D mmWave FMCW radar sensors and inertial sensor data as
 - 05/2021: Initial release of RIO - Radar Inertial Odometry and Radar based ego velocity estimation.
 
 ## Introduction
-RIO is a toolbox for EKF-based Radar Inertial Odometry and Radar based ego velocity estimation.
+RIO is a toolbox for EKF-based Radar Inertial Odometry.
 RIO features the following packages:
-- [x_rio](./x_rio): An EKF-based Multi-Radar Inertial Odometry Pipeline with online calibration of the radar sensor extrinsics and yaw aiding using Manhattan world assumptions
-- [ekf_rio](./ekf_rio): An EKF-based Radar Inertial Odometry Pipeline with online calibration of the radar sensor extrinsics
-- [ekf_yrio](./ekf_yrio): An extension of ekf_rio featuring yaw aiding based on Manhattan world assumptions 
+- [x_rio](./x_rio) (recommended): An EKF-based Multi-Radar Inertial Odometry Pipeline with online calibration of the radar sensor extrinsics and yaw aiding using Manhattan world assumptions. Can be used with a single or multi radar setups. 
+- [ekf_rio](./ekf_rio) (deprecated): An EKF-based Radar Inertial Odometry Pipeline with online calibration of the radar sensor extrinsics
+- [ekf_yrio](./ekf_yrio) (deprecated): An extension of ekf_rio featuring yaw aiding based on Manhattan world assumptions 
 
 Checkout the README files of the individual packages for more details.
 
@@ -49,8 +49,7 @@ If you use our implementation for your academic research, please cite the relate
     pages = {329-339},
     title = {x-RIO: Radar Inertial Odometry with Multiple Radar Sensors and Yaw Aiding},
     volume = {12},
-    journal = {Gyroscopy and Navigation},
-}
+    journal = {Gyroscopy and Navigation}}
 ~~~
 
 ***ekf_yrio:***
@@ -60,7 +59,7 @@ If you use our implementation for your academic research, please cite the relate
   booktitle={2021 28th Saint Petersburg International Conference on Integrated Navigation Systems (ICINS)}, 
   title={Yaw aided Radar Inertial Odometry uisng Manhattan World Assumptions}, 
   year={2021},
-  pages={1-10}
+  pages={1-10}}
 ~~~
 
 ***ekf_rio:***

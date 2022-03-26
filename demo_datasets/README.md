@@ -1,26 +1,15 @@
-# Demo Datasets RIO Format
+# Demo Datasets
 
-The demo datasets have been recorded with a sensor setup consisting of an Analog Devices ADIS16448 IMU and a TI
- IWR6843AOPEVM. The IMU rate is ca. 410 Hz and the radar rate is 10Hz. The radar measurements are hardware triggered to synchronize the measurements with the IMU data.
+We provide some demo datasets to try out our radar inertial pipelines. 
+The individual datasets are given in the corresponding directories including READMEs.
 
-Datasets:
-- vicon_easy: A dataset recorded at our motion capture lab. Ground truth has been created fusing the motion capture and inertial data with a batch optimization. The radar sensor is facing forward. The extrinsic calibration is given in [calib_vicon_dataset](calib_vicon_dataset.yaml).
-- icins2021_datasets_ekf-yrio_rosbag.bag: A dataset recorded in an office building. Pseudo ground truth has been
- created using VINS with loop closure. The radar sensor is mounted facing at approx. 45 degrees to the left. The
-  extrinsic calibration is given in [calib_radar_inertial_datasets_icins_2021_carried](calib_radar_inertial_datasets_icins_2021_carried.yaml).
+There are two different types of point clouds:
+- RIO point cloud format: used by all our own datasets
+- ti_mmwave_rospkg format: point clouds recorded with the ti_mmwave_rospkg driver
 
-The rosbags contain the following topics:
-- /ground_truth/pose (geometry_msgs/PoseStamped): Ground truth or pseudo ground truth pose
-- /ground_truth/twist (geometry_msgs/TwistStamped): Ground truth velocity (vicon dataset only)
-- /ground_truth/twist_body (geometry_msgs/TwistStamped): Ground truth velocity of body frame (vicon dataset only)
-- /sensor_platform/imu (sensor_msgs/Imu): IMU data
-- /sensor_platform/baro (sensor_msgs/FluidPressure): Barometer data
-- /sensor_platform/radar/trigger (std_msgs/Header): Radar trigger, marks the start of a radar scan
-- /sensor_platform/radar/scan (sensor_msgs/PointCloud2): Radar scan whereas each point consists of: x, y, z, snr_db
-, v_doppler_mps, noise_db and  range. The time stamp is already in sync with the corresponding trigger header.
-
+# RIO Point Cloud Format
 The point cloud point type is sketched below, for an example implementation see [radar_point_cloud
-](../rio_utils/src/radar_point_cloud.cpp):
+](https://github.com/christopherdoer/reve/blob/master/radar_ego_velocity_estimator/src/radar_point_cloud.cpp):
 
 ~~~
 struct RadarPointCloudType
@@ -36,9 +25,16 @@ struct RadarPointCloudType
 pcl::PointCloud<RadarPointCloudType> your_pcl;
 ~~~
 
-# Demo Dataset ti_mmwave_rospkg Format
-The [ti_mmwave_rospkg_demo.bag](ti_mmwave_rospkg_demo.bag) demo dataset has been recorded with the ti_mmwave_rospkg (version 3.3.0) driver.
-It also features trigger messages, the calibration is provided [here](calib_ti_mmwave_rospkg_dataset.yaml).
+# ti_mmwave_rospkg Point Cloud Format
+The point cloud point type is sketched below, for an example implementation see [radar_point_cloud
+](https://github.com/christopherdoer/reve/blob/master/radar_ego_velocity_estimator/src/radar_point_cloud.cpp):
 
-
-
+~~~
+POINT_CLOUD_REGISTER_POINT_STRUCT (mmWaveCloudType,
+                                    (float, x, x)
+                                    (float, y, y)
+                                    (float, z, z)
+                                    (float, intensity, intensity)
+                                    (float, velocity, velocity))
+pcl::PointCloud<mmWaveCloudType> your_pcl;
+~~~
