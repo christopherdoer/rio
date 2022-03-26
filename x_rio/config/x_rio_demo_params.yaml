@@ -25,8 +25,6 @@ topic_ground_truth_twist_body: "/ground_truth/twist_body"
 # KF Updates
 altimeter_update: False
 radar_update: True
-gnss_pos_update: False
-gnss_vel_update: False
 radar_yaw_update: True
 
 sigma_altimeter: 5.0

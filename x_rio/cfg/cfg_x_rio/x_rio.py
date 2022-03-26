@@ -16,8 +16,6 @@ def configure(gen):
     subscribers.add("topic_baro_altimeter", str_t, 0, "Topic baro altimeter", "empty")
     subscribers.add("topic_radar_scan", str_t, 0, "Topic radar scan", "empty")
     subscribers.add("topic_radar_trigger", str_t, 0, "Topic radar data trigger", "empty")
-    subscribers.add("topic_gnss_valid", str_t, 0, "Topic gnss vlid measurment", "empty")
-    subscribers.add("topic_gnss_measurement", str_t, 0, "Topic gnss measurment", "empty")
 
     # publishers
     publishers = gen.add_group("Publishers")
@@ -36,18 +34,7 @@ def configure(gen):
     kf_update = gen.add_group("KF Update")
     kf_update.add("altimeter_update", bool_t, 0, "enable altimeter update", False)
     kf_update.add("radar_update", bool_t, 0, "Enable radar update", False)
-    kf_update.add("gnss_pos_update", bool_t, 0, "Enable gnss position update", False)
-    kf_update.add("gnss_vel_update", bool_t, 0, "Enable gnss velocity update", False)
     kf_update.add("sigma_altimeter", double_t, 0, "Sigma of altimeter measurement", 1.0, 0, 10)
-
-    # gnss
-    kf_update.add("outlier_percentil_gnss_pos", double_t, 0, "Percentil of chi^2 distribution for Mahalnobis distance outlier rejection", 1.0, 0, 10)
-    kf_update.add("outlier_percentil_gnss_vel", double_t, 0, "Percentil of chi^2 distribution for Mahalnobis distance outlier rejection", 1.0, 0, 10)
-    kf_update.add("min_pos_accuracy_init", double_t, 0, "Min pos accuracy for init", 1.0, 0, 10)
-    kf_update.add("sigma_pos_scaling", double_t, 0, "Scaling for sigma pos", 1.0, 0, 1000)
-    kf_update.add("max_pos_acc_thresh", double_t, 0, "No fusion above this threshold", 1.0, 0, 1000)
-    kf_update.add("max_vel_acc_thresh", double_t, 0, "No fusion above this threshold", 1.0, 0, 1000)
-    kf_update.add("min_n_sat", int_t, 0, "Min num sat for fusion", 4, 0, 30)
 
     # radar model
     radar = gen.add_group("Radar Measurement Model")
