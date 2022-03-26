@@ -2,7 +2,7 @@
 
 The demo dataset have been recorded with a sensor setup consisting of an Analog Devices ADIS16448 IMU, two TI
  IWR6843AOPEVM point at approx. 45 deg to the left and right and a IWR6843RISK pointing forward. 
-The IMU rate is ca. 210 Hz and the radar rate is 10Hz. 
+The IMU rate is ca. 210 Hz and the radar rates are 10Hz. 
 The radar measurements are hardware triggered to synchronize the measurements with the IMU data.
 The radar sensor are using Time Division Multiple Access (TDMA) to prevent interference.
 
@@ -10,7 +10,7 @@ The radar sensor are using Time Division Multiple Access (TDMA) to prevent inter
 # demo_x_rio (RIO Point Cloud Format)
 
 This datasets has been recored in an office building and features the same start and end pose.
-The extrinsic calibrations of the three radar sensors are given in [radar_left](./x_rio_demo_calib_left.yaml), [radar_center](./x_rio_demo_calib_center.yaml) and [radar_right](./x_rio_demo_calib_right.yaml)
+The extrinsic calibrations of the three radar sensors are given in [radar_left](./x_rio_demo_calib_left.yaml), [radar_center](./x_rio_demo_calib_center.yaml) and [radar_right](./x_rio_demo_calib_right.yaml).
 More information regarding the sensor rig is given in the corresponding paper: [x-RIO: Radar Inertial Odometry with Multiple Radar Sensors and Yaw Aiding](https://christopherdoer.github.io/publication/2022_02_JGN2022).
 
 The rosbag contains the following topics:
@@ -28,7 +28,7 @@ The rosbag contains the following topics:
 - /sensor_platform/radar_center/scan (sensor_msgs/PointCloud2): Right radar scan 
 
 
-Run with [x_rio](../x_rio):
+Run with [x_rio](../../x_rio):
 
 ~~~[shell]
 roslaunch x_rio x_rio_demo.launch type:=rosbag_node enable_rviz:=True enable_plot:=True
@@ -37,7 +37,7 @@ roslaunch x_rio x_rio_demo.launch type:=rosbag_node enable_rviz:=True enable_plo
 # sim.bag
 Sample dataset of simulated sensor data to test the x_rio characteristics. Simulates a sensor rig of three radar sensors and an IMU.
 
-Run with [x_rio](../x_rio) including 10 Monte Carlo runs and an evalution of the result:
+Run with [x_rio](../../x_rio) including 10 Monte Carlo runs and an evalution of the result:
 
 ~~~[shell]
 rosrun x_rio run_sim.py 
