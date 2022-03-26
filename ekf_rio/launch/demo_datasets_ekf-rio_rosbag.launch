@@ -7,11 +7,11 @@
     <param name="use_sim_time" value="False" type="bool"/>
     <arg name="enable_rviz" default="True"/>
 
-    <arg name="dataset_dir" default="$(find ekf_rio)../demo_datasets/"/>
+    <arg name="dataset_dir" default="$(find ekf_rio)../demo_datasets/ekf_rio/"/>
     <arg name="rosbag" default="vicon_easy.bag"/>
 
     <arg name="config" default="ekf_rio_default"/>
-    <arg name="calibration" default="$(find ekf_rio)../demo_datasets/calib_vicon_dataset"/>
+    <arg name="calibration" default="$(find ekf_rio)../demo_datasets/ekf_rio/calib_vicon_dataset"/>
 
     <arg name="run_without_radar_trigger" default="False" />
 

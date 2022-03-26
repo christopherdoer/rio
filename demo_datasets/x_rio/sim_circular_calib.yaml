@@ -1,0 +1,58 @@
+## Topics
+topic_imu: "/sim/imu"
+radar_0/topic_radar_trigger: "/sim/radar_0/trigger"
+radar_0/topic_radar_scan: "/sim/radar_0/scan"
+topic_v_r_0: "/sim/radar_0/v_r"
+
+radar_1/topic_radar_trigger: "/sim/radar_1/trigger"
+radar_1/topic_radar_scan: "/sim/radar_1/scan"
+topic_v_r_1: "/sim/radar_1/v_r"
+
+radar_2/topic_radar_trigger: "/sim/radar_2/trigger"
+radar_2/topic_radar_scan: "/sim/radar_2/scan"
+topic_v_r_2: "/sim/radar_2/v_r"
+
+## perfect intialization
+# translation of radar frame expressed in body frame
+# l_b_r_0 = np.array([0.05, -0.08, 0.04])
+# eul_b_r_0 = np.deg2rad([-170, -1, 145])
+# q_b_r_0 = array([ 0.03449821, -0.29882475, -0.9502803 ,  0.08050461])
+radar_0/l_b_r_x: 0.05
+radar_0/l_b_r_y: -0.08
+radar_0/l_b_r_z: 0.04
+
+radar_0/q_b_r_w: 0.03449821
+radar_0/q_b_r_x: -0.29882475
+radar_0/q_b_r_y: -0.9502803
+radar_0/q_b_r_z: 0.08050461
+
+# eul_b_r_1 = np.deg2rad([-170, 1, 43])
+# l_b_r_1 = np.array([0.01, 0.11, 0.07])
+# array([ 0.07790203, -0.9271205 , -0.36438503,  0.0400299 ])
+radar_1/l_b_r_x: 0.01
+radar_1/l_b_r_y: 0.11
+radar_1/l_b_r_z: 0.07
+
+radar_1/q_b_r_w: 0.07790203
+radar_1/q_b_r_x: -0.9271205
+radar_1/q_b_r_y: -0.36438503
+radar_1/q_b_r_z: 0.0400299
+
+# eul_b_r_2 = np.deg2rad([-180, -1, -5])
+# l_b_r_2 = np.array([-0.07, 0.03, -0.05]).reshape(3, 1)
+# array([-3.80646132e-04, -9.99010181e-01,  4.36177265e-02, -8.71822977e-03])
+radar_2/l_b_r_x: -0.07
+radar_2/l_b_r_y: 0.03
+radar_2/l_b_r_z: -0.05
+
+radar_2/q_b_r_w: -3.80646132e-04
+radar_2/q_b_r_x: -9.99010181e-01
+radar_2/q_b_r_y: 4.36177265e-02
+radar_2/q_b_r_z: -8.71822977e-03
+
+# length of each radar frame (="exposure time" of radar scan) in milliseconds
+radar_frame_ms: 18.5
+
+# nominal radar rate
+radar_rate: 10
+

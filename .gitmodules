@@ -1,0 +1,6 @@
+[submodule "reve"]
+	path = reve
+	url = https://github.com/christopherdoer/reve.git
+[submodule "rpg_trajectory_evaluation"]
+	path = rpg_trajectory_evaluation
+	url = https://github.com/christopherdoer/rpg_trajectory_evaluation.git

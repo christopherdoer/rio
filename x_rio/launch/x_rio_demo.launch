@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!--This file is part of RIO - Radar Inertial Odometry and Radar based ego velocity estimation.-->
+<!--@author Christopher Doer <christopher.doer@kit.edu>-->
+
+<launch>
+    <arg name="enable_rviz" default="False"/>
+    <arg name="enable_plot" default="False"/>
+
+    <arg name="type"/>
+
+    <arg name="dataset_dir" default="$(find x_rio)../demo_datasets/x_rio/"/>
+    <arg name="rosbag" default="demo_x_rio.bag"/>
+
+    <arg name="config" default="x_rio_demo_params"/>
+    <arg name="calibration_0" default="$(arg dataset_dir)/x_rio_demo_calib_left"/>
+    <arg name="calibration_1" default="$(arg dataset_dir)/x_rio_demo_calib_right"/>
+    <arg name="calibration_2" default="$(arg dataset_dir)/x_rio_demo_calib_center"/>
+
+    <arg name="n_radar" default="3"/>
+    <arg name="radar_yaw_update" default="true"/>
+    <arg name="altimeter_update" default="true"/>
+    <arg name="estimate_extrinsics" default="true"/>
+
+    <arg name="filter_node_name" default="rio"/>
+    <arg name="log_level" default="Info"/>
+
+    <node name="$(arg filter_node_name)" pkg="x_rio" type="$(arg type)" output="screen" launch-prefix="bash -c 'sleep 0.; $0 $@' " clear_params="false">
+        <param name="rosbag_path" value="$(arg dataset_dir)/$(arg rosbag)" type="string"/>
+        <rosparam file="$(find x_rio)/config/$(arg config).yaml" command="load" ns=""/>
+        <rosparam file="$(arg calibration_0).yaml" command="load" ns="radar_0"/>
+        <rosparam file="$(arg calibration_1).yaml" command="load" ns="radar_1"/>
+        <rosparam file="$(arg calibration_2).yaml" command="load" ns="radar_2"/>
+        <param name="b_0_w_z_deg" value="-0.10" type="double"/>
+        <param name="yaw_0_deg" value="2" type="double"/>
+        <param name="topic_imu" value="/sensor_platform/imu" type="str"/>
+        <param name="topic_baro_altimeter" value="/sensor_platform/baro" type="str"/>
+        <param name="radar_yaw_update" value="$(arg radar_yaw_update)" type="bool"/>
+        <param name="altimeter_update" value="$(arg altimeter_update)" type="bool"/>
+        <param name="estimate_extrinsics" value="$(arg estimate_extrinsics)" type="bool"/>
+        <param name="n_radar" value="$(arg n_radar)" type="int"/>
+    </node>
+
+    <node pkg="rosservice" type="rosservice" name="set_$(arg filter_node_name)_log_level"
+          args="call --wait /$(arg filter_node_name)/set_logger_level 'ros.$(arg filter_node_name)' '$(arg log_level)'"
+          launch-prefix="bash -c 'sleep 0.1; $0 $@' "/>
+
+    <node name="plot_states" pkg="x_rio" type="plot_states.py" output="screen" if="$(arg enable_plot)"/>
+
+    <node pkg="rviz" type="rviz" name="rviz" output="screen" args="-d $(find x_rio)/config/x_rio_rviz.rviz" if="$(arg enable_rviz)"/>
+
+</launch>

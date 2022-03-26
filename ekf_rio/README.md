@@ -2,7 +2,7 @@
 
 This package provides an efficient C++ implementation of EKF-based Radar Inertial Odometry with online calibration of
  the radar sensor extrinsic calibration.
-Based on a single radar scan, the 3D radar ego velocity is estimated using the [radar_ego_velocity_estimation](../radar_ego_velocity_estimation) package.
+Based on a single radar scan, the 3D radar ego velocity is estimated using the [radar_ego_velocity_estimatior](https://github.com/christopherdoer/reve) package.
 Fusion with intertial data is carried out using an Error State EKF.
 In addition, barometer measurements can be fused as well for improved z-axis estimation.
 We are using the North East Down (NED) convention within our navigation filter.
@@ -67,6 +67,9 @@ Run the demo in rosbag mode which also starts rviz for visualization, does an ev
 ~~~[shell]
 roslaunch ekf_rio demo_datasets_ekf-rio_rosbag.launch do_plot:=True 
 ~~~
+
+The results of the most recent main branch might diver a little, the results above have been created with: git checkout c147214.
+
 
 Run without rviz and plotting:
 

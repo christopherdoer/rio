@@ -1,0 +1,25 @@
+## Topics
+topic_imu: "/sensor_platform/imu"
+topic_baro_altimeter: "/sensor_platform/baro"
+topic_radar_trigger: "/sensor_platform/radar_right/trigger"
+topic_radar_scan: "/sensor_platform/radar_right/scan"
+
+## Extrinsic calibration of body frame to radar frame
+# translation of radar frame expressed in body frame
+l_b_r_x: 0.05
+l_b_r_y: -0.04
+l_b_r_z: 0.04
+
+# rotation radar frame to body frame
+q_b_r_x: -0.926237675
+q_b_r_y: -0.373772748
+q_b_r_z: 0.026054024
+q_b_r_w: 0.041217599
+
+# length of each radar frame (="exposure time" of radar scan) in milliseconds
+radar_frame_ms: 18.5
+
+# nominal radar rate
+radar_rate: 10
+
+

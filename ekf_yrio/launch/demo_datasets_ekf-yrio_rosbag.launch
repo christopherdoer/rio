@@ -6,11 +6,11 @@
     <param name="use_sim_time" value="False" type="bool"/>
     <arg name="enable_rviz" default="True"/>
 
-    <arg name="dataset_dir" default="$(find ekf_yrio)../demo_datasets/"/>
+    <arg name="dataset_dir" default="$(find ekf_yrio)../ekf_yrio/demo_datasets/"/>
     <arg name="rosbag" default="radar_inertial_datasets_icins_2021_carried_2.bag"/>
 
     <arg name="config" default="ekf_yrio_default"/>
-    <arg name="calibration" default="$(find ekf_yrio)../demo_datasets/calib_radar_inertial_datasets_icins_2021_carried"/>
+    <arg name="calibration" default="$(find ekf_yrio)../demo_datasets/ekf_yrio/calib_radar_inertial_datasets_icins_2021_carried"/>
 
     <arg name="bag_start" default="0"/>
     <arg name="bag_duration" default="-1.0"/>
@@ -18,14 +18,13 @@
 
     <arg name="log_level" default="Info"/>
 
-    <node name="$(arg filter_node_name)" pkg="ekf_yrio" type="rosbag_node" output="screen" launch-prefix="bash -c 'sleep 2; $0 $@' ">
+    <node name="$(arg filter_node_name)" pkg="ekf_yrio" type="rosbag_node" output="screen" launch-prefix="bash -c 'sleep 2; $0 $@' " clear_params="true">
         <rosparam file="$(find ekf_yrio)/config/$(arg config).yaml" command="load" ns=""/>
         <rosparam file="$(arg calibration).yaml" command="load" ns=""/>
         <param name="rosbag_path" value="$(arg dataset_dir)/$(arg rosbag)" type="string"/>
         <param name="bag_start" value="$(arg bag_start)" type="double"/>
         <param name="bag_duration" value="$(arg bag_duration)" type="double"/>
         <param name="republish_ground_truth" value="true" type="bool"/>
-        <param name="enable_yaw_aiding" value="true" type="bool"/>
     </node>
 
     <node pkg="rosservice" type="rosservice" name="set_$(arg filter_node_name)_log_level"

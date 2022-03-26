@@ -7,7 +7,7 @@
     <arg name="enable_rviz" default="True"/>
 
     <arg name="config" default="ekf_yrio_default"/>
-    <arg name="calibration" default="$(find ekf_yrio)../demo_datasets/calib_radar_inertial_datasets_icins_2021_carried"/>
+    <arg name="calibration" default="$(find ekf_yrio)../demo_datasets/ekf_yrio/calib_radar_inertial_datasets_icins_2021_carried"/>
 
     <arg name="filter_node_name" default="ekf_yrio"/>
     <arg name="log_level" default="Info"/>

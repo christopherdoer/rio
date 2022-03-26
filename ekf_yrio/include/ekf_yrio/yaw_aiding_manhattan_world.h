@@ -126,6 +126,7 @@ protected:
 template <class Cfg>
 void YawAidingManhattanWorld::configure(Cfg& config)
 {
+  config_.yaw_aiding_min_dist          = config.yaw_aiding_min_dist;
   config_.yaw_aiding_max_dist          = config.yaw_aiding_max_dist;
   config_.yaw_aiding_ele_thresh_deg    = config.yaw_aiding_ele_thresh_deg;
   config_.yaw_aiding_min_snr_detection = config.yaw_aiding_min_snr_detection;
