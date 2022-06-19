@@ -4,7 +4,7 @@ project(x_rio)
 find_package(catkin_simple REQUIRED)
 catkin_simple()
 
-add_compile_options(-std=c++11)
+add_compile_options(-std=c++14)
 
 SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -O0 -g")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -O3 -march=native")

@@ -6,7 +6,7 @@
     <param name="use_sim_time" value="False" type="bool"/>
     <arg name="enable_rviz" default="True"/>
 
-    <arg name="dataset_dir" default="$(find ekf_yrio)../ekf_yrio/demo_datasets/"/>
+    <arg name="dataset_dir" default="$(find ekf_yrio)../demo_datasets/ekf_yrio/"/>
     <arg name="rosbag" default="radar_inertial_datasets_icins_2021_carried_2.bag"/>
 
     <arg name="config" default="ekf_yrio_default"/>

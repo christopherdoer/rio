@@ -84,14 +84,18 @@ If you use our implementation for your academic research, please cite the relate
 
 
 ## Getting Started
-Our implementation depends on:
+RIO supports:
 - Ubuntu 16.04 and ROS Kinetic
+- Ubuntu 18.04 and ROS Melodic
+- Ubuntu 20.04 and ROS Noetic
+
+RIO depends on:
 - [catkin_simple](https://github.com/catkin/catkin_simple.git)
 - [catkin_tools](https://catkin-tools.readthedocs.io/en/latest/) (for convenience)
 - Pull dependencies via submodules, run once: ` git submodule update --init --recursive `. This will setup the following two submodules: 
   - [reve](https://github.com/christopherdoer/reve)
   - [rpg_trajectory_evaluation](https://github.com/christopherdoer/rpg_trajectory_evaluation) (optional, for comprehensive evaluation)
-    To use the evaluation scripts, the following dependecies are required:
+    To use the evaluation scripts, the following dependencies are required:
     - sudo apt-get install texlive-latex-extra texlive-fonts-recommended dvipng cm-super
     - pip2 install -U PyYAML colorama ruamel.yaml==0.15.0
 
