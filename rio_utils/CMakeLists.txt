@@ -4,7 +4,7 @@ project(rio_utils)
 find_package(catkin_simple REQUIRED)
 catkin_simple()
 
-add_compile_options(-std=c++11)
+add_compile_options(-std=c++14)
 
 cs_add_library(${PROJECT_NAME}
   src/strapdown.cpp

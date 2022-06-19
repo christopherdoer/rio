@@ -168,6 +168,8 @@ bool XRioRos::initBaro()
   baro_h_0_ = std::accumulate(baro_init_vec_.begin(), baro_init_vec_.end(), 0.0) / baro_init_vec_.size();
   ROS_INFO_STREAM(kStreamingPrefix << "Initialized baro h_0: " << baro_h_0_);
   baro_initialized_ = true;
+
+  return true;
 }
 
 void XRioRos::run()
