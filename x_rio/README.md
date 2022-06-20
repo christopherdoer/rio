@@ -65,7 +65,7 @@ roslaunch x_rio x_rio_demo.launch type:=rosbag_node enable_rviz:=True enable_plo
 Run x_rio using only two radar sensors:
 
 ~~~[shell]
-roslaunch x_rio x_rio_demo.launch type:=rosbag_node enable_rviz:=True enable_plot:=False N_radar:=2
+roslaunch x_rio x_rio_demo.launch type:=rosbag_node enable_rviz:=True enable_plot:=False n_radar:=2
 ~~~
 
 Run in online mode:
