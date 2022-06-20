@@ -14,10 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+#include <boost/math/distributions/chi_squared.hpp>
+#include <numeric>
+
 #include <ekf_yrio/yaw_aiding_manhattan_world.h>
 #include <radar_ego_velocity_estimator/radar_point_cloud.h>
-
-#include <boost/math/distributions/chi_squared.hpp>
 
 using namespace rio;
 

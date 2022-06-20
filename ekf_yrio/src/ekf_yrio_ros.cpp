@@ -15,6 +15,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <math.h>
+#include <numeric>
 
 #include <geometry_msgs/TransformStamped.h>
 #include <rosbag/bag.h>
