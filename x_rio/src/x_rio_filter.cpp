@@ -38,13 +38,12 @@ bool XRioFilter::init(const std::vector<ImuDataStamped>& imu_init_vec, const Rad
   const Vector3 acc_mean = a_accu / imu_init_vec.size();
   const Vector3 w_mean   = w_accu / imu_init_vec.size();
 
-  const Real eul_nb_roll  = -1 * std::atan2(acc_mean.y(), -acc_mean.z());
-  const Real eul_nb_pitch = std::asin(acc_mean.x() / acc_mean.z());
+  EulerAngles roll_pitch = math_helper::initFromAcc(acc_mean, init_struct_.gravity);
 
-  ROS_INFO_STREAM(kStreamingPrefix << "Initialized attitude: " << angles::to_degrees(eul_nb_roll) << "deg, "
-                                   << angles::to_degrees(eul_nb_pitch) << "deg");
+  ROS_INFO_STREAM(kStreamingPrefix << "Initialized attitude: " << roll_pitch.to_degrees().x() << "deg, "
+                                   << roll_pitch.to_degrees().y() << "deg");
 
-  nav_sol_.setEuler_n_b(EulerAngles(eul_nb_roll, eul_nb_pitch, init_struct_.yaw_0));
+  nav_sol_.setEuler_n_b(EulerAngles(roll_pitch.roll(), roll_pitch.pitch(), init_struct_.yaw_0));
 
   bias_.acc  = init_struct_.b_a_0;
   bias_.gyro = init_struct_.omega_calibration ? w_mean + init_struct_.b_w_0 : init_struct_.b_w_0;
@@ -308,10 +307,10 @@ bool XRioFilter::updateAltimeter(const Real neg_rel_h, const Real& sigma)
 }
 
 bool XRioFilter::updateRadarEgoVelocity(const uint radar_id,
-                                          const Vector3& v_r,
-                                          const Matrix3& P_v_r,
-                                          const Vector3& w,
-                                          const Real outlier_rejection_thresh)
+                                        const Vector3& v_r,
+                                        const Matrix3& P_v_r,
+                                        const Vector3& w,
+                                        const Real outlier_rejection_thresh)
 {
   Matrix H = Matrix::Zero(3, getCovarianceMatrix().cols());
   Vector r(3);
@@ -408,9 +407,9 @@ bool XRioFilter::updateRadarEgoVelocity(const uint radar_id,
 }
 
 bool XRioFilter::updateYaw(const uint radar_id,
-                             const Real& yaw_m,
-                             const Real& sigma_yaw,
-                             const Real& outlier_rejection_thresh)
+                           const Real& yaw_m,
+                           const Real& sigma_yaw,
+                           const Real& outlier_rejection_thresh)
 {
   Matrix H = Matrix::Zero(1, covariance_.cols());
   Vector r(1);
@@ -444,11 +443,11 @@ bool XRioFilter::updateYaw(const uint radar_id,
 }
 
 bool XRioFilter::updateWithOutlierRejection(const Vector& r,
-                                              const Matrix& H,
-                                              const Matrix& R,
-                                              const uint chi_squared_dof,
-                                              const Real& outlier_rejection_thresh,
-                                              const std::string& failure_log_msg)
+                                            const Matrix& H,
+                                            const Matrix& R,
+                                            const uint chi_squared_dof,
+                                            const Real& outlier_rejection_thresh,
+                                            const std::string& failure_log_msg)
 {
   if (outlier_rejection_thresh > 0.00001)
   {
