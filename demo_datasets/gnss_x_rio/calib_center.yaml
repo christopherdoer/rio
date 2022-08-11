@@ -10,81 +10,11 @@ l_b_r_x: 0.04
 l_b_r_y: 0.03
 l_b_r_z: -0.03
 
-
 # rotation radar frame to body frame
-# array([  0.41854244,   0.4763282 , -91.9760567 ])
-#q_b_r_x: 0.00552722362023
-#q_b_r_y: 0.00026130707383
-#q_b_r_z: -0.719194177781
-#q_b_r_w: 0.694787101322
-#rio_lsq_c_z & 12.02 & 9.26 & 6.25 & 13.52 & 6.98 & 16.76 & 9.97 & 11.46 & 13.43
-#Mean z: 11.07
-
-# q = math_helper.eulerToQuat(np.deg2rad([1.41854244,   0.4763282 , -91.9760567  ])).transpose()
-#q_b_r_x: 0.011590097
-#q_b_r_y: -0.006014776
-#q_b_r_z: -0.719169073
-#q_b_r_w: 0.694712412
-#rio_lsq_c_z & 13.56 & 12.99 & 8.16 & 17.32 & 8.50 & 18.98 & 12.89 & 15.78 & 14.61
-#Mean z: 13.64
-
-# q = math_helper.eulerToQuat(np.deg2rad([-1.41854244,   0.4763282 , -91.9760567  ])).transpose()
-#q_b_r_x: -0.005611551
-#q_b_r_y: 0.011790606
-#q_b_r_z: -0.719097570
-#q_b_r_w: 0.694786425
-#rio_lsq_c_z & 7.42 & 4.81 & 4.25 & 8.77 & 2.70 & 12.43 & 8.71 & 4.99 & 10.78
-#Mean z: 7.21
-
-# q = math_helper.eulerToQuat(np.deg2rad([-2.41854244,   0.4763282 , -91.9760567  ])).transpose()
-#q_b_r_x: -0.011674416
-#q_b_r_y: 0.018065387
-#q_b_r_z: -0.718967298
-#q_b_r_w: 0.694711001
-#rio_lsq_c_z & 5.89 & 3.40 & 3.35 & 7.09 & 1.56 & 11.40 & 7.04 & 2.37 & 10.05
-#Mean z: 5.79
-
-#q = math_helper.eulerToQuat(np.deg2rad([-3.41854244,   0.4763282 , -91.9760567  ])).transpose()
-#q_b_r_x: -0.017736392
-#q_b_r_y: 0.024338793
-#q_b_r_z: -0.718782274
-#q_b_r_w: 0.694582671
-#rio_lsq_c_z & 4.83 & 0.15 & 2.33 & 5.18 & 0.41 & 9.32 & 5.94 & -1.47 & 9.40
-#Mean z: 4.01
-
-# q = math_helper.eulerToQuat(np.deg2rad([-5.41854244,   0.4763282 , -91.9760567  ])).transpose()
-#q_b_r_x: -0.029855830
-#q_b_r_y: 0.036879567
-#q_b_r_z: -0.718248029
-#q_b_r_w: 0.694167340
-#rio_lsq_c_z & 2.45 & -4.06 & 0.61 & 1.01 & -2.46 & 5.03 & 4.93 & -5.09 & 5.70
-#Mean z: 0.90
-
-# q = math_helper.eulerToQuat(np.deg2rad([-6.41854244,   0.4763282 , -91.9760567  ])).transpose()
-#q_b_r_x: -0.035912369
-#q_b_r_y: 0.043145979
-#q_b_r_z: -0.717898849
-#q_b_r_w: 0.693880370
-#rio_lsq_c_z & 1.04 & -6.78 & 1.21 & -2.05 & -4.04 & 13.98 & 2.55 & -8.67 & 7.00
-#Mean z: 0.47
-
-#algo & outdoor_2_189.54m_146s & outdoor_3_261.51m_199s & outdoor_4_2_134.13m_99s & outdoor_7_302.38m_197s
-#rio_lsq_c_3d & 0.93 & 1.99 & 0.42 & 1.94
-#algo & outdoor_2_189.54m_146s & outdoor_3_261.51m_199s & outdoor_4_2_134.13m_99s & outdoor_7_302.38m_197s
-#rio_lsq_c_z & 1.13 & -5.12 & -0.52 & -5.66
-#Mean z: -2.5
-
-# q = math_helper.eulerToQuat(np.deg2rad([-5.41854244,   0.4763282 , -91.9760567  ])).transpose()
 q_b_r_x: -0.029855830
 q_b_r_y: 0.036879567
 q_b_r_z: -0.718248029
 q_b_r_w: 0.694167340
-#algo & outdoor_2_190.18m_146s & outdoor_3_263.05m_199s & outdoor_4_2_133.84m_99s & outdoor_7_301.11m_197s
-#rio_lsq_c_3d & 2.02 & 2.04 & 0.42 & 1.06
-#algo & outdoor_2_190.18m_146s & outdoor_3_263.05m_199s & outdoor_4_2_133.84m_99s & outdoor_7_301.11m_197s
-#rio_lsq_c_z & 3.40 & -3.21 & 0.29 & -3.00
-#Mean z: -0.63
-
 
 # length of each radar frame (="exposure time" of radar scan) in milliseconds
 radar_frame_ms: 18.5
