@@ -20,9 +20,12 @@ If you use x_rio or the provided datasets for your academic research, please cit
     volume = {12},
     journal = {Gyroscopy and Navigation}}
 ~~~
+## Demos
 
+### Autonomous Radar Inertial Drone Navigation even in Dense Fog 
+[![Autonomous Radar Inertial Drone Navigation even in Dense Fog](http://img.youtube.com/vi/FjsV1TouY-A/0.jpg)](https://www.youtube.com/watch?v=FjsV1TouY-A "Autonomous Radar Inertial Drone Navigation even in Dense Fog")
 
-## Demo Result: office floor
+## Office floor
 The image below compares x_rio (blue) against groundtruth (red) on the office_floor datasets which is part of the [Multi Radar Inertial Datasets JGN 2022](https://christopherdoer.github.io/datasets/multi_radar_inertial_datasets_JGN2022).
 This trajectory covers 425m including two loops of the approximate same path.
 The final position error is just 0.25m which corresponds to 0.1% of the trajectory length.
