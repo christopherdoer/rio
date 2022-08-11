@@ -138,5 +138,19 @@ static Quaternion getCorrectedQuaternion(const Vector3& err_euler, const Quatern
       Quaternion(1, -0.5 * err_euler.x(), -0.5 * err_euler.y(), -0.5 * err_euler.z()), q);
 }
 
+/**
+ * @brief Initializes the attitude in roll and pitch from acceleration
+ * @param acc_mean      mean acceleration (assuming being static)
+ * @param gravity       local gravity
+ * @returns the initialized attitude in EulerAngels (yaw = 0)
+ */
+static EulerAngles initFromAcc(const Vector3& acc_mean, const Real& gravity)
+{
+  EulerAngles attitude(0, 0, 0);
+  attitude.roll()  = -1 * std::atan2(acc_mean.y(), -acc_mean.z());
+  attitude.pitch() = std::asin(std::max(-1.0 + std::numeric_limits<Real>::epsilon(),
+                                        std::min(1.0 - std::numeric_limits<Real>::epsilon(), acc_mean.x() / gravity)));
+  return attitude;
+}
 }  // namespace math_helper
 }  // namespace rio
