@@ -1,0 +1,59 @@
+capture_directory: "~"
+fixed_frame: odom
+target_frame: odom
+fix_orientation: false
+rotate_90: false
+enable_antialiasing: true
+show_displays: true
+show_status_bar: true
+show_capture_tools: true
+window_width: 2495
+window_height: 1388
+view_scale: 0.2075016
+offset_x: 63.8733
+offset_y: 10.88122
+use_latest_transforms: true
+background: "#a0a0a4"
+displays:
+  - type: mapviz_plugins/multires_image
+    name: new display
+    config:
+      visible: true
+      collapsed: false
+      path: ../mapviz/kit_campus_google_earth.geo
+      offset_x: 0
+      offset_y: 0
+  - type: mapviz_plugins/navsat
+    name: new display
+    config:
+      visible: false
+      collapsed: false
+      topic: /rio/local_origin
+      color: "#000000"
+      draw_style: points
+      position_tolerance: 1
+      buffer_size: 0
+  - type: mapviz_plugins/pointcloud2
+    name: new display
+    config:
+      visible: true
+      collapsed: false
+      topic: /rio/gnss_pcl
+      size: 10
+      buffer_size: 100
+      alpha: 0.5
+      color_transformer: pos_inlier
+      min_color: "#ff0000"
+      max_color: "#00ff00"
+      value_min: 1
+      value_max: 5
+      use_rainbow: true
+      use_automaxmin: false
+      unpack_rgb: false
+  - type: mapviz_plugins/path
+    name: new display
+    config:
+      visible: true
+      collapsed: false
+      topic: /rio/pose_path
+      color: "#00ff00"

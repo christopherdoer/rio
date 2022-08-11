@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<!--This file is part of RIO - Radar Inertial Odometry and Radar based ego velocity estimation.-->
+<!--@author Christopher Doer <christopher.doer@kit.edu>-->
+
+<launch>
+    <arg name="enable_mapviz" default="False"/>
+    <arg name="enable_plot" default="False"/>
+
+    <arg name="type"/>
+
+    <arg name="dataset_dir" default="$(find gnss_x_rio)../demo_datasets/gnss_x_rio/"/>
+    <arg name="rosbag" default="demo_gnss_x_rio.bag"/>
+
+    <arg name="config" default="gnss_x_rio_demo_params"/>
+    <arg name="calibration_0" default="$(arg dataset_dir)/calib_left"/>
+    <arg name="calibration_1" default="$(arg dataset_dir)/calib_right"/>
+    <arg name="calibration_2" default="$(arg dataset_dir)/calib_center"/>
+
+    <arg name="n_radar" default="1"/>
+    <arg name="radar_yaw_update" default="true"/>
+    <arg name="altimeter_update" default="true"/>
+    <arg name="estimate_extrinsics" default="true"/>
+    <arg name="gnss_pos_update" default="true"/>
+    <arg name="gnss_vel_update" default="true"/>
+
+    <arg name="sigma_p_0" default="2"/>
+    <arg name="sigma_yaw_0_deg" default="3"/>
+
+    <arg name="filter_node_name" default="rio"/>
+<!--    <arg name="log_level" default="Info"/>-->
+
+    <node name="$(arg filter_node_name)" pkg="gnss_x_rio" type="$(arg type)" output="screen" launch-prefix="bash -c 'sleep 0.; $0 $@' " clear_params="false">
+        <param name="rosbag_path" value="$(arg dataset_dir)/$(arg rosbag)" type="string"/>
+        <rosparam file="$(find gnss_x_rio)/config/$(arg config).yaml" command="load" ns=""/>
+        <rosparam file="$(arg calibration_0).yaml" command="load" ns="radar_0"/>
+        <rosparam file="$(arg calibration_1).yaml" command="load" ns="radar_1"/>
+        <rosparam file="$(arg calibration_2).yaml" command="load" ns="radar_2"/>
+        <param name="b_0_w_z_deg" value="-0.1" type="double"/>
+        <param name="yaw_0_deg" value="0" type="double"/>
+        <param name="topic_imu" value="/sensor_platform/imu" type="str"/>
+        <param name="topic_baro_altimeter" value="/sensor_platform/baro" type="str"/>
+        <param name="radar_yaw_update" value="$(arg radar_yaw_update)" type="bool"/>
+        <param name="altimeter_update" value="$(arg altimeter_update)" type="bool"/>
+        <param name="gnss_pos_update" value="$(arg gnss_pos_update)" type="bool"/>
+        <param name="gnss_vel_update" value="$(arg gnss_vel_update)" type="bool"/>
+        <param name="estimate_extrinsics" value="$(arg estimate_extrinsics)" type="bool"/>
+        <param name="n_radar" value="$(arg n_radar)" type="int"/>
+
+        <param name="sigma_yaw_deg" value="$(arg sigma_yaw_0_deg)" type="double"/>
+        <param name="sigma_p" value="$(arg sigma_p_0)" type="double"/>
+
+        <param name="topic_gnss_measurement" value="/sensor_platform/gps/measurement" type="str"/>
+        <param name="topic_gnss_valid" value="/sensor_platform/gps/valid" type="str"/>
+
+    </node>
+
+<!--    <node pkg="rosservice" type="rosservice" name="set_$(arg filter_node_name)_log_level"-->
+<!--          args="call &#45;&#45;wait /$(arg filter_node_name)/set_logger_level 'ros.$(arg filter_node_name)' '$(arg log_level)'"-->
+<!--          launch-prefix="bash -c 'sleep 0.1; $0 $@' "/>-->
+
+    <node name="plot_states" pkg="x_rio" type="plot_states.py" output="screen" if="$(arg enable_plot)"/>
+
+    <!-- install guide: https://github.com/swri-robotics/mapviz -->
+    <node pkg="mapviz" type="mapviz" name="mapviz"  if="$(arg enable_mapviz)">
+        <param name="config" value="$(find gnss_x_rio)/config/mapviz.mvc"/>
+    </node>
+
+    <node pkg="swri_transform_util" type="initialize_origin.py" name="initialize_origin" output="screen"  if="$(arg enable_mapviz)">
+        <param name="local_xy_frame" value="local_enu"/>
+        <param name="local_xy_origin" value="auto"/>
+        <param name="local_xy_navsatfix_topic" value="/rio/local_origin"/>
+    </node>
+     <node pkg="tf2_ros" type="static_transform_publisher" name="ned_enu" args=" 0 0 0 -1.57 0 0 /odom /local_enu"  if="$(arg enable_mapviz)"/>
+
+</launch>
