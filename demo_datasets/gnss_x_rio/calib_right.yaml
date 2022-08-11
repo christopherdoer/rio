@@ -1,0 +1,104 @@
+## Topics
+topic_imu: "/sensor_platform/imu"
+topic_baro_altimeter: "/sensor_platform/baro"
+topic_radar_trigger: "/sensor_platform/radar_right/trigger"
+topic_radar_scan: "/sensor_platform/radar_right/scan"
+
+## Extrinsic calibration of body frame to radar frame
+# translation of radar frame expressed in body frame
+l_b_r_x: 0.05
+l_b_r_y: -0.04
+l_b_r_z: 0.07
+
+
+# rotation radar frame to body frame
+#new array([-177.10430974,   -0.92128919,   44.2932775 ])
+#q_b_r_x: 0.924473273362
+#q_b_r_y: 0.380872278299
+#q_b_r_z: -0.00189574130176
+#q_b_r_w: -0.0167893009974
+# rio_lsq_r_z & -4.50 & -9.18 & -1.38 & -4.74 & -5.45 & -7.21 & -5.02 & -8.69 & -3.95
+
+# q = math_helper.eulerToQuat(np.deg2rad([-175.10430974,   -0.92128919,   44.2932775 ])).transpose()
+#q_b_r_x: -0.925217560
+#q_b_r_y: -0.376940213
+#q_b_r_z: 0.008660477
+#q_b_r_w: 0.042585650
+# rio_lsq_r_z & -8.32 & -14.21 & -4.25 & -10.62 & -8.46 & -11.63 & -8.32 & -14.88 & -4.08
+# mean -9
+
+
+# q = math_helper.eulerToQuat(np.deg2rad([-178.10430974,   -0.92128919,   44.2932775 ])).transpose()
+#q_b_r_x: -0.926015274
+#q_b_r_y: -0.377037750
+#q_b_r_z: -0.001209635
+#q_b_r_w: 0.018351685
+#rio_lsq_r_z & -3.68 & -7.47 & -0.61 & -3.16 & -4.41 & -6.27 & -3.69 & -7.07 & -2.42
+#Mean z: -4.31
+
+# q = math_helper.eulerToQuat(np.deg2rad([-180.10430974,   -0.92128919,   44.2932775 ])).transpose()
+#q_b_r_x: -0.926194518
+#q_b_r_y: -0.376959214
+#q_b_r_z: -0.007789667
+#q_b_r_w: 0.002187695
+#rio_lsq_r_z & 0.49 & -2.84 & 1.89 & 2.04 & -0.78 & -2.31 & -0.87 & -1.18 & -0.60
+#Mean z: -0.46
+
+# q = math_helper.eulerToQuat(np.deg2rad([-180.80430974,   -0.92128919,   44.2932775 ])).transpose()
+#q_b_r_x: -0.926190601
+#q_b_r_y: -0.376904597
+#q_b_r_z: -0.010092220
+#q_b_r_w: -0.003470111
+#rio_lsq_r_z & 1.96 & -0.96 & 2.78 & 4.17 & 0.73 & -0.87 & 0.20 & 0.78 & 0.39
+#Mean z: 1.02
+
+# q = math_helper.eulerToQuat(np.deg2rad([-180.50430974,   -0.92128919,   44.2932775 ])).transpose()
+#q_b_r_x: -0.926196512
+#q_b_r_y: -0.376929727
+#q_b_r_z: -0.009105453
+#q_b_r_w: -0.001045341
+#rio_lsq_r_z & 1.40 & -1.68 & 2.33 & 3.33 & 0.22 & -1.40 & -0.23 & 0.06 & -0.30
+#Mean z: 0.41
+
+#q = math_helper.eulerToQuat(np.deg2rad([-180.250430974,   -0.92128919,   44.2932775 ])).transpose()
+#q_b_r_x: -0.926196555
+#q_b_r_y: -0.376948975
+#q_b_r_z: -0.008270339
+#q_b_r_w: 0.001006658
+#rio_lsq_r_z & 0.78 & -2.53 & 2.05 & 2.46 & -0.35 & -1.85 & -0.51 & -0.64 & -0.62
+#Mean z: -0.13
+
+# q = math_helper.eulerToQuat(np.deg2rad([-180.30430974,   -0.92128919,   44.2932775 ])).transpose()
+#q_b_r_x: -0.926196926
+#q_b_r_y: -0.376945045
+#q_b_r_z: -0.008447573
+#q_b_r_w: 0.000571178
+#rio_lsq_r_z & 0.77 & -2.31 & 2.10 & 2.65 & -0.23 & -1.85 & -0.70 & -0.60 & -0.40
+#Mean z: -0.06
+
+#algo & outdoor_2_191.34m_146s & outdoor_3_262.14m_199s & outdoor_4_2_134.47m_99s & outdoor_7_303.84m_197s
+#rio_lsq_r_3d & 0.52 & 2.22 & 1.04 & 1.09
+#algo & outdoor_2_191.34m_146s & outdoor_3_262.14m_199s & outdoor_4_2_134.47m_99s & outdoor_7_303.84m_197s
+#rio_lsq_r_z & 0.64 & -4.25 & 1.36 & -2.82
+#Mean z: -1.27
+
+#q = math_helper.eulerToQuat(np.deg2rad([-180.85974,   -0.92128919,   44.2932775 ])).transpose()
+q_b_r_x: -0.926188814
+q_b_r_y: -0.376899671
+q_b_r_z: -0.010274535
+q_b_r_w: -0.003918128
+#algo & outdoor_2_191.50m_146s & outdoor_3_261.99m_199s & outdoor_4_2_134.13m_99s & outdoor_7_303.81m_197s
+#rio_lsq_r_3d & 0.95 & 2.21 & 1.61 & 0.74
+#algo & outdoor_2_191.50m_146s & outdoor_3_261.99m_199s & outdoor_4_2_134.13m_99s & outdoor_7_303.81m_197s
+#rio_lsq_r_z & 1.48 & -2.89 & 2.13 & -1.40
+#Mean z: -0.17
+
+
+
+# length of each radar frame (="exposure time" of radar scan) in milliseconds
+radar_frame_ms: 18.5
+
+# nominal radar rate
+radar_rate: 10
+
+
