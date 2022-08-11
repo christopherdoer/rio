@@ -36,6 +36,8 @@ bool GnssXRioFilter::addGnssStateClone(const ros::Time& trigger_stamp)
   gnss_state.p_n_b              = nav_sol_.getPosition_n_b();
   gnss_state.v_n_b              = nav_sol_.v_n_b;
   addClone(std::shared_ptr<CloneBase>(new GnssClone(clones_.size(), gnss_state)));
+
+  return true;
 }
 
 bool GnssXRioFilter::getGnssClone(GnssClone& gnss_clone) const

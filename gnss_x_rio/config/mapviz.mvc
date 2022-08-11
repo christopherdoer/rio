@@ -1,4 +1,4 @@
-capture_directory: ~
+capture_directory: "~"
 fixed_frame: odom
 target_frame: odom
 fix_orientation: false

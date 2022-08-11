@@ -23,7 +23,9 @@ If you use gnss_x_rio or the provided datasets for your academic research, pleas
 
 ## Getting Started
 
-To run the satelite overlay visualization, [mapviz](https://swri-robotics.github.io/mapviz/) is required.
+To run the satellite overlay visualization, [mapviz](https://swri-robotics.github.io/mapviz/) is required:
+- `sudo apt-get install ros-$ROS_DISTRO-mapviz ros-$ROS_DISTRO-mapviz-plugins ros-$ROS_DISTRO-tile-map  ros-$ROS_DISTRO-multires-image`
+
 
 Run gnss_x_rio on the demo indoor datasets in rosbag mode and mapviz:
 
