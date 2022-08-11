@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>gnss_x_rio</name>
+  <version>1.0.0</version>
+  <description>The gnss_x_rio package provides an GNSS fusion extension to x_rio, an Extended Kalman Filter based Radar Inertial Odometry for single and multi-radar setups.</description>
+
+  <maintainer email="Christopher.Doer@kit.edu">Christopher Doer</maintainer>
+
+  <license>GPLv3</license>
+
+  <!-- <url type="website">http://wiki.ros.org/x_rio</url> -->
+
+  <author email="christopher.doer@kit.edu">Christopher Doer</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <buildtool_depend>catkin_simple</buildtool_depend>
+
+  <build_depend>message_generation</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>sensor_msgs</build_depend>
+  <build_depend>geometry_msgs</build_depend>
+  
+  <depend>message_runtime</depend>
+  <depend>rosbag</depend>
+  <depend>roscpp</depend>	
+  <depend>angles</depend>
+  <depend>dynamic_reconfigure</depend>
+  <depend>tf2_ros</depend>
+  <depend>tf2_eigen</depend>
+
+  <depend>rio_utils</depend>
+  <depend>radar_ego_velocity_estimator</depend>
+  <depend>x_rio</depend>
+
+  <export>
+  </export>
+</package>
