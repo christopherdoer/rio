@@ -247,7 +247,7 @@ void EkfRioRos::iterate()
 
     // collect angluar rate measurements during the radar scan
     if (!radar_w_queue_.empty() && (radar_w_queue_.back().time_stamp - radar_w_queue_.front().time_stamp).toSec() <
-                                       config_.radar_frame_ms / 1.0e-3)
+                                       config_.radar_frame_ms / 1.0e3)
       radar_w_queue_.emplace_back(imu_data_);
   }
 
